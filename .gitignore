@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# VSCode
+.vscode/
+
+# agent rules（按你的目录名）
+.agent/
+# 或更精确只忽略 rules
+.agent/rules/
+
