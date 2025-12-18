@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout title="博客文章" description="探索关于技术、设计与生活的深度思考。">
+    <section class="container-custom py-20">
+        <div class="max-w-3xl mb-16">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-6">
+                所有文章
+            </h1>
+            <p class="text-xl text-brand-500 leading-relaxed">
+                探索关于技术、设计与生活的深度思考。在这里，我记录学习历程，分享开发经验。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => <BlogCard post={post} />)}
+        </div>
+    </section>
+</BaseLayout>

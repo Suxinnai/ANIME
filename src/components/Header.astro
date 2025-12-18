@@ -1,0 +1,170 @@
+---
+import { Menu, Sun, Moon, Zap } from 'lucide-react';
+import { getCollection } from 'astro:content';
+
+const navItems = [
+  { name: '首页', href: '/', alt: 'Home' },
+  { name: '博客', href: '/blog', alt: 'Blog' },
+  { name: '留言板', href: '/guestbook', alt: 'Guestbook' },
+  { name: '关于', href: '/about', alt: 'About' },
+];
+
+// Get all posts for the "Random Adventure" button
+const allPosts = await getCollection("blog");
+const allSlugs = allPosts.map(post => post.slug);
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
+  <div class="absolute inset-0 bg-white/80 dark:bg-[#121212]/90 backdrop-blur-md border-b-2 border-anime-dark dark:border-white/10 shadow-sm transition-colors duration-500"></div>
+  
+  <nav class="container-custom h-20 flex items-center justify-between relative z-10">
+    <!-- Logo Area -->
+    <a href="/" class="flex items-center gap-3 group">
+      <div class="relative w-10 h-10 md:w-12 md:h-12 border-2 border-anime-dark dark:border-white/20 rounded-full overflow-hidden bg-white shadow-comic-sm dark:shadow-none group-hover:scale-110 transition-transform">
+        <img src="/mascot.jpg" alt="Mascot" class="w-full h-full object-cover" />
+      </div>
+      <div class="flex flex-col">
+        <span class="font-display font-bold text-xl md:text-2xl text-anime-dark dark:text-white tracking-tight group-hover:text-anime-pink transition-colors">
+          ANIME<span class="text-anime-blue">.LOG</span>
+        </span>
+        <span class="text-[10px] font-bold text-anime-dark/50 dark:text-gray-400 tracking-widest uppercase hidden md:block">
+          Adventure Logs
+        </span>
+      </div>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-2">
+      <div class="flex items-center bg-white dark:bg-white/5 border-2 border-anime-dark dark:border-white/10 rounded-full px-2 py-1 shadow-comic-sm dark:shadow-none mr-4 transition-colors">
+        {navItems.map(item => (
+          <a href={item.href} class="relative px-4 py-2 rounded-full font-display font-bold text-anime-dark dark:text-gray-300 hover:bg-anime-yellow hover:text-anime-dark transition-all duration-200 group">
+            {item.name}
+            <!-- Tooltip -->
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-anime-dark text-white text-[10px] px-2 py-0.5 rounded pointer-events-none whitespace-nowrap">
+              {item.alt}
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <!-- Theme Toggle -->
+      <button 
+        id="theme-toggle" 
+        class="p-2.5 rounded-full border-2 border-anime-dark bg-white hover:bg-anime-dark hover:text-anime-yellow transition-all duration-300 shadow-comic-sm active:translate-y-0.5 active:shadow-none overflow-hidden group" 
+        aria-label="切换主题"
+      >
+        <div class="relative w-5 h-5">
+           <Sun className="w-5 h-5 absolute inset-0 transition-transform duration-500 rotate-0 dark:rotate-90 dark:opacity-0" />
+           <Moon className="w-5 h-5 absolute inset-0 transition-transform duration-500 -rotate-90 opacity-0 dark:rotate-0 dark:opacity-100" />
+        </div>
+      </button>
+      
+      <!-- Random Adventure Button (Lightning) -->
+      <button 
+        id="random-post-btn"
+        data-slugs={JSON.stringify(allSlugs)}
+        class="ml-2 p-2.5 rounded-full border-2 border-anime-dark bg-anime-pink text-white hover:bg-anime-dark hover:text-anime-yellow transition-colors shadow-comic-sm active:translate-y-0.5 active:shadow-none group relative" 
+        aria-label="随机冒险"
+      >
+        <Zap className="w-5 h-5 fill-current group-hover:animate-pulse" />
+        <!-- Tooltip -->
+        <span class="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-anime-pink text-white text-[10px] px-2 py-1 rounded shadow-sm pointer-events-none whitespace-nowrap z-50 border border-anime-dark">
+            随机传送
+        </span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="md:hidden p-2 border-2 border-anime-dark rounded-lg shadow-comic-sm bg-white active:translate-y-0.5 active:shadow-none" id="mobile-menu-button">
+      <Menu className="w-6 h-6 text-anime-dark" />
+    </button>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white border-b-2 border-anime-dark p-4 shadow-comic space-y-2 animate-fade-in">
+    {navItems.map(item => (
+      <a href={item.href} class="block px-4 py-3 font-display font-bold text-anime-dark border-2 border-transparent hover:border-anime-dark hover:bg-anime-yellow/30 rounded-lg transition-colors">
+        {item.name}
+        <span class="text-xs text-anime-dark/40 ml-2 font-body font-normal">{item.alt}</span>
+      </a>
+    ))}
+    <div class="flex gap-4 pt-4 mt-2 border-t border-dashed border-anime-dark/20">
+       <button id="mobile-theme-toggle" class="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-anime-dark rounded-lg font-bold hover:bg-gray-100">
+          <Sun className="w-5 h-5 dark:hidden" />
+          <Moon className="w-5 h-5 hidden dark:block" />
+          <span>切换主题</span>
+       </button>
+       <button id="mobile-random-btn" class="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-anime-dark rounded-lg font-bold bg-anime-pink text-white hover:brightness-110">
+          <Zap className="w-5 h-5 fill-current" />
+          <span>随机传送</span>
+       </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  function setupHeader() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    // Random Post Logic
+    const randomBtns = [document.getElementById('random-post-btn'), document.getElementById('mobile-random-btn')];
+    
+    // Theme Logic
+    const toggleTheme = () => {
+      const element = document.documentElement;
+      element.classList.toggle("dark");
+      const isDark = element.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    };
+
+    themeToggle?.addEventListener('click', toggleTheme);
+    mobileThemeToggle?.addEventListener('click', toggleTheme);
+
+    mobileMenuButton?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+    });
+
+    // Random Adventure Logic
+    randomBtns.forEach(btn => {
+        if(!btn) return;
+        btn.addEventListener('click', () => {
+            // Get slugs from desktop button data attribute (source of truth)
+            const desktopBtn = document.getElementById('random-post-btn');
+            const slugsFn = desktopBtn?.dataset.slugs;
+            
+            if (slugsFn) {
+                try {
+                    const slugs = JSON.parse(slugsFn);
+                    if (slugs.length > 0) {
+                        const randomSlug = slugs[Math.floor(Math.random() * slugs.length)];
+                        window.location.href = `/blog/${randomSlug}`;
+                    } else {
+                        alert("暂无冒险可供传送！(No posts found)");
+                    }
+                } catch (e) {
+                    console.error("Error parsing slugs", e);
+                }
+            } else {
+                 // Fallback if data attribute is missing
+                 window.location.href = '/blog';
+            }
+        });
+    });
+  }
+
+  setupHeader();
+  document.addEventListener('astro:after-swap', setupHeader);
+</script>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out forwards;
+  }
+</style>

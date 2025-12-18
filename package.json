@@ -1,0 +1,27 @@
+{
+  "name": "antigravity-blog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.8",
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.5",
+    "@tailwindcss/typography": "^0.5.16",
+    "@vercel/kv": "^1.0.1",
+    "astro": "^5.1.7",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.477.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss": "^3.4.17"
+  }
+}

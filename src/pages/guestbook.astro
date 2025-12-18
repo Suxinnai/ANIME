@@ -1,0 +1,212 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+    MessageSquare,
+    User,
+    Coffee,
+    PenTool,
+    Github,
+    ArrowRight,
+} from "lucide-react";
+
+// Mock comments for visual demonstration
+const mockComments = [
+    {
+        user: "Traveler_A",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+        content: "这里的UI设计太棒了！像是在玩RPG游戏一样。",
+        date: "2025-12-18",
+        level: "Lv. 5",
+    },
+    {
+        user: "CodeMaster",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+        content: "期待校园论坛项目的上线！如果有开源计划请务必踢我一下。",
+        date: "2025-12-17",
+        level: "Lv. 42",
+    },
+    {
+        user: "NekoFan",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Milo",
+        content: "路过... 甚至觉得可以在这里挂机听歌（并没有歌）。",
+        date: "2025-12-16",
+        level: "Lv. 1",
+    },
+];
+---
+
+<BaseLayout
+    title="留言板 | Guestbook"
+    description="欢迎来到冒险者酒馆，留下你的传说。"
+>
+    <section class="container-custom py-20 min-h-[80vh]">
+        <!-- Page Header -->
+        <div class="text-center mb-16 relative">
+            <div class="inline-block relative">
+                <h1
+                    class="font-display font-bold text-4xl md:text-5xl text-anime-dark dark:text-white mb-4 relative z-10"
+                >
+                    Guestbook
+                </h1>
+                <div
+                    class="absolute -bottom-2 left-0 right-0 h-3 bg-anime-pink/30 -skew-x-12 z-0"
+                >
+                </div>
+            </div>
+            <p
+                class="text-anime-dark/60 dark:text-gray-400 text-lg max-w-2xl mx-auto mt-4 font-medium"
+            >
+                冒险者公会酒馆 · 留言墙
+            </p>
+            <p class="text-xs text-anime-dark/40 dark:text-gray-500 mt-2">
+                在这里交换情报，或者只是喝一杯。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <!-- Sidebar: Shopkeeper & Rules -->
+            <div class="lg:col-span-4 space-y-8">
+                <!-- Shopkeeper Card -->
+                <div
+                    class="bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/20 rounded-2xl p-6 shadow-comic relative overflow-hidden"
+                >
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-16 h-16 rounded-full border-2 border-anime-dark overflow-hidden bg-anime-bg"
+                        >
+                            <img
+                                src="/mascot.jpg"
+                                alt="Shopkeeper"
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div>
+                            <div
+                                class="font-bold text-anime-dark dark:text-white text-lg"
+                            >
+                                店长 Suxinnai
+                            </div>
+                            <div
+                                class="text-xs text-anime-pink bg-anime-pink/10 px-2 py-0.5 rounded-full inline-block font-bold mt-1"
+                            >
+                                NPC
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-anime-bg dark:bg-black/20 p-4 rounded-xl border border-anime-dark/10 text-sm text-anime-dark/80 dark:text-gray-300 leading-relaxed font-mono relative"
+                    >
+                        <Coffee
+                            className="w-12 h-12 text-anime-dark/5 absolute -right-2 -bottom-2 rotate-12"
+                        />
+                        "欢迎光临！无论你是迷路的旅人，还是寻找 Bug 的勇者，都可以在这里歇歇脚。<br
+                        /><br />
+                        请随意留言，但在酒馆内禁止施放高阶魔法（指发广告）。"
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <a
+                    href="https://github.com/Suxinnai/your-repo/issues"
+                    target="_blank"
+                    class="block w-full bg-anime-dark dark:bg-white dark:text-anime-dark text-white font-bold py-4 rounded-xl shadow-comic hover:-translate-y-1 transition-transform text-center flex items-center justify-center gap-2 group"
+                >
+                    <Github className="w-5 h-5" />
+                    <span>前往 GitHub 签到</span>
+                    <ArrowRight
+                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                </a>
+
+                <div
+                    class="text-center text-xs text-anime-dark/40 dark:text-gray-600"
+                >
+                    * 留言将通过 GitHub Issues 同步（未来）
+                </div>
+            </div>
+
+            <!-- Main: Message Wall -->
+            <div class="lg:col-span-8">
+                <div class="space-y-6">
+                    <!-- Comment Input Placeholder (Visual Only) -->
+                    <div
+                        class="bg-white dark:bg-[#1e1e1e] border-2 border-dashed border-anime-dark/20 dark:border-white/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 py-12 hover:border-anime-pink/50 transition-colors cursor-pointer group"
+                    >
+                        <div
+                            class="w-12 h-12 bg-anime-bg dark:bg-white/5 rounded-full flex items-center justify-center text-anime-dark/30 dark:text-gray-500 group-hover:scale-110 transition-transform"
+                        >
+                            <PenTool className="w-6 h-6" />
+                        </div>
+                        <div
+                            class="text-anime-dark/50 dark:text-gray-500 font-bold group-hover:text-anime-pink transition-colors"
+                        >
+                            写下新的篇章...
+                        </div>
+                    </div>
+
+                    <!-- Comments List -->
+                    {
+                        mockComments.map((comment, index) => (
+                            <div
+                                class="bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/20 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-4 animate-fade-in-up"
+                                style={`animation-delay: ${index * 100}ms`}
+                            >
+                                <div class="flex-shrink-0">
+                                    <img
+                                        src={comment.avatar}
+                                        alt={comment.user}
+                                        class="w-12 h-12 rounded-full border border-anime-dark/20 bg-gray-100"
+                                    />
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-anime-dark dark:text-white">
+                                                {comment.user}
+                                            </span>
+                                            <span class="text-[10px] font-bold text-white bg-anime-blue px-1.5 py-0.5 rounded">
+                                                {comment.level}
+                                            </span>
+                                        </div>
+                                        <span class="text-xs text-anime-dark/40 dark:text-gray-500 font-mono">
+                                            {comment.date}
+                                        </span>
+                                    </div>
+                                    <p class="text-anime-dark/80 dark:text-gray-300 text-sm leading-relaxed">
+                                        {comment.content}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    }
+
+                    <div class="text-center py-8">
+                        <span
+                            class="text-anime-dark/30 dark:text-gray-600 font-mono text-sm"
+                            >-- END OF LOG --</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</BaseLayout>
+
+<script>
+    import { ArrowRight } from "lucide-react"; // Not needed in script tag but ensuring imports logic
+</script>

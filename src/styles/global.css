@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth antialiased font-sans;
+  }
+
+  body {
+    /* 默认模式 (Light) */
+    @apply bg-anime-bg text-anime-text min-h-screen selection:bg-anime-pink selection:text-white transition-colors duration-500;
+  }
+
+  /* 暗黑模式覆盖 (Dark) */
+  html.dark body {
+    @apply bg-anime-dark-bg text-anime-dark-text;
+  }
+}
+
+@layer components {
+
+  /* --- 卡片组件 --- */
+  .card-comic {
+    /* Light: 白底、深蓝边框、深蓝阴影 */
+    @apply bg-white border-2 border-anime-dark shadow-comic hover:shadow-comic-hover hover:-translate-y-1 transition-all duration-200 rounded-xl;
+  }
+
+  /* Dark: 深灰底、灰边框、黑阴影 */
+  .dark .card-comic {
+    @apply bg-anime-dark-surface border-anime-dark-border shadow-dark-comic;
+  }
+
+  /* --- 玻璃拟态 --- */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border-b-2 border-anime-dark/10;
+  }
+
+  .dark .glass {
+    @apply bg-anime-dark-bg/80 border-white/5;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* --- 按钮组件 --- */
+  .btn-comic {
+    @apply inline-flex items-center justify-center px-6 py-2 rounded-lg font-display font-bold border-2 border-anime-dark shadow-comic active:translate-y-0.5 active:shadow-none transition-all duration-100;
+  }
+
+  /* Dark Button 基础调整 */
+  .dark .btn-comic {
+    @apply border-anime-dark-border shadow-none bg-anime-dark-surface text-anime-dark-text;
+  }
+
+  .dark .btn-comic:hover {
+    @apply bg-gray-700;
+  }
+
+  /* Primary Button (粉色) */
+  .btn-primary {
+    @apply btn-comic bg-anime-pink text-white hover:bg-anime-pink/90;
+  }
+
+  /* Dark Primary: 保持粉色，但可能稍微暗一点或者发光，这里保持原色因为粉色在黑色上很好看 */
+  .dark .btn-primary {
+    @apply bg-anime-pink border-anime-pink text-white shadow-lg shadow-anime-pink/20;
+  }
+
+  /* Secondary Button (白色) */
+  .btn-secondary {
+    @apply btn-comic bg-white text-anime-dark hover:bg-anime-yellow;
+  }
+
+  /* Dark Secondary */
+  .dark .btn-secondary {
+    @apply bg-anime-dark-surface text-white hover:bg-gray-700 hover:text-anime-yellow;
+  }
+}

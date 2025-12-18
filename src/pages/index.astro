@@ -1,0 +1,202 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogCard from "../components/BlogCard.astro";
+import DigitalTwin from "../components/DigitalTwinReact.jsx"; // Use React version
+import { getCollection } from "astro:content";
+import { ArrowRight, Sparkles, Gamepad2 } from "lucide-react";
+
+// Get latest 3 posts
+const posts = (await getCollection("blog"))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 3);
+---
+
+<BaseLayout
+    title="首页"
+    description="Suxinnai 的数字异世界 - 记录代码、设计与生活的冒险"
+>
+    <!-- Hero Section -->
+    <section
+        class="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20"
+    >
+        <!-- Background Grid -->
+        <div class="absolute inset-0 z-0">
+            <div
+                class="absolute inset-0 bg-white dark:bg-[#121212] transition-colors duration-500"
+            >
+            </div>
+            <div
+                class="absolute inset-0 opacity-[0.03]"
+                style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 30px 30px;"
+            >
+            </div>
+        </div>
+
+        <div
+            class="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+        >
+            <!-- Left: Text Content -->
+            <div class="space-y-8 animate-fade-in-up">
+                <!-- Badge -->
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-anime-yellow border-2 border-anime-dark rounded-full shadow-comic-sm transform hover:-rotate-2 transition-transform cursor-default"
+                >
+                    <Gamepad2 className="w-4 h-4 text-anime-dark" />
+                    <span
+                        class="font-display font-bold text-xs uppercase tracking-widest text-anime-dark"
+                        >Mission Start!</span
+                    >
+                </div>
+
+                <h1
+                    class="text-6xl md:text-7xl lg:text-8xl font-display font-black leading-[0.9] text-anime-dark dark:text-white tracking-tighter"
+                >
+                    Coding <br />
+                    <span class="text-anime-blue relative inline-block">
+                        Adventure
+                        <Sparkles
+                            className="absolute -top-6 -right-8 w-12 h-12 text-anime-yellow animate-bounce-slow"
+                        />
+                        <svg
+                            class="absolute w-full h-3 -bottom-2 left-0 text-anime-pink"
+                            viewBox="0 0 100 10"
+                            preserveAspectRatio="none"
+                        >
+                            <path
+                                d="M0 5 Q 50 10 100 5"
+                                stroke="currentColor"
+                                stroke-width="8"
+                                fill="none"></path>
+                        </svg>
+                    </span>
+                </h1>
+
+                <p
+                    class="text-xl text-anime-dark/70 dark:text-gray-400 max-w-lg font-medium leading-relaxed"
+                >
+                    欢迎来到我的数字异世界。这里记录了关于<span
+                        class="font-bold text-anime-pink border-b-2 border-anime-pink/30"
+                        >代码</span
+                    >、<span
+                        class="font-bold text-anime-blue border-b-2 border-anime-blue/30"
+                        >设计</span
+                    >与生活的<strong class="text-anime-dark dark:text-white"
+                        >主线任务</strong
+                    >攻略。
+                </p>
+
+                <!-- System Notice (Retro Style) -->
+                <div
+                    class="w-full max-w-md bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-3 flex items-center gap-3 overflow-hidden"
+                >
+                    <div
+                        class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                    >
+                    </div>
+                    <span
+                        class="text-xs font-mono text-anime-dark/60 dark:text-gray-400 whitespace-nowrap animate-marquee"
+                    >
+                        [系统公告] 欢迎来到 Suxinnai
+                        的异世界！校园论坛毕设正在火热开发中，预计下周上线测试版...
+                        🍵
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a
+                        href="/blog"
+                        class="px-8 py-4 bg-anime-pink text-white font-display font-bold text-lg rounded-xl border-2 border-anime-dark shadow-comic hover:translate-y-[-4px] hover:shadow-comic-hover transition-all flex items-center gap-2 group"
+                    >
+                        开始阅读
+                        <ArrowRight
+                            className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                        />
+                    </a>
+                    <a
+                        href="/about"
+                        class="px-8 py-4 bg-white dark:bg-transparent text-anime-dark dark:text-white font-display font-bold text-lg rounded-xl border-2 border-anime-dark dark:border-white/20 shadow-comic dark:shadow-none hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                    >
+                        角色属性
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Digital Twin Component -->
+            <div
+                class="relative z-10 lg:h-[600px] flex items-center justify-center"
+            >
+                <!-- The Digital Twin Component -->
+                <div
+                    class="w-full max-w-md transform hover:scale-[1.02] transition-transform duration-500"
+                >
+                    <DigitalTwin client:load />
+                </div>
+
+                <!-- Decorative Elements behind -->
+                <div
+                    class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-anime-blue/20 to-anime-pink/20 blur-3xl rounded-full opacity-50 animate-pulse-slow"
+                >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Posts Section -->
+    <section class="py-20 bg-gray-50 dark:bg-[#181818]">
+        <div class="container-custom">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <h2
+                        class="text-4xl md:text-5xl font-display font-bold text-anime-dark dark:text-white mb-4 relative inline-block"
+                    >
+                        最新回放
+                        <span
+                            class="absolute -bottom-2 left-0 w-full h-3 bg-anime-yellow/30 -z-10 skew-x-12"
+                        ></span>
+                    </h2>
+                    <p class="text-anime-dark/60 dark:text-gray-400 max-w-xl">
+                        探索最新的冒险记录，获取编码技能点。
+                    </p>
+                </div>
+                <a
+                    href="/blog"
+                    class="hidden md:flex items-center gap-2 font-bold text-anime-dark dark:text-white hover:text-anime-pink transition-colors group"
+                >
+                    查看全部文章
+                    <ArrowRight
+                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {posts.map((post) => <BlogCard post={post} />)}
+            </div>
+
+            <div class="mt-12 text-center md:hidden">
+                <a
+                    href="/blog"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/5 border-2 border-anime-dark dark:border-white/10 rounded-xl font-bold text-anime-dark dark:text-white shadow-comic-sm"
+                >
+                    查看全部文章
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+    .animate-marquee {
+        display: inline-block;
+        animation: marquee 15s linear infinite;
+    }
+</style>

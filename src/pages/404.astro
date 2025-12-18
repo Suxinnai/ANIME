@@ -1,0 +1,87 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Home, ArrowLeft } from "lucide-react";
+
+// 这里假设您已经把上传的图片保存为了 public/404-character.jpg
+// 如果没有，可以先用 /mascot.jpg 代替
+const imagePath = "/mascot.jpg";
+---
+
+<BaseLayout title="404: 迷失虚空 | Anime Log">
+    <div
+        class="min-h-[70vh] flex flex-col items-center justify-center text-center relative overflow-hidden"
+    >
+        <!-- 巨大的背景装饰字 -->
+        <!-- 稍微增加了透明度(opacity-10)，确保能被看见 -->
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display font-bold text-[15rem] md:text-[20rem] text-anime-dark/10 dark:text-white/10 select-none pointer-events-none z-0 whitespace-nowrap"
+        >
+            404
+        </div>
+
+        <!-- 核心内容 -->
+        <div
+            class="relative z-10 flex flex-col items-center gap-8 animate-fade-in-up"
+        >
+            <!-- 角色图容器 -->
+            <div class="relative group">
+                <!-- 装饰光环 -->
+                <div
+                    class="absolute inset-0 bg-anime-pink/20 rounded-full blur-2xl group-hover:bg-anime-pink/30 transition-all duration-500"
+                >
+                </div>
+
+                <!-- 图片 -->
+                <div
+                    class="relative w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white dark:border-white/10 shadow-comic dark:shadow-none overflow-hidden bg-white dark:bg-[#1e1e1e] rotate-[-5deg] group-hover:rotate-0 transition-transform duration-300"
+                >
+                    <img
+                        src={imagePath}
+                        alt="Lost Character"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                </div>
+
+                <!-- 悬浮的问号 -->
+                <div
+                    class="absolute -top-4 -right-4 bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/20 w-12 h-12 rounded-full flex items-center justify-center shadow-comic animate-bounce-slow font-display text-2xl text-anime-pink"
+                >
+                    ?
+                </div>
+            </div>
+
+            <!-- 文本区域 -->
+            <div class="space-y-4 max-w-md px-4">
+                <h1
+                    class="text-4xl md:text-5xl font-display font-bold text-anime-dark dark:text-white"
+                >
+                    Ops! 还没开发到这儿...
+                </h1>
+                <p
+                    class="text-anime-dark/70 dark:text-gray-400 text-lg font-medium"
+                >
+                    你要找的页面可能已经像断线的风筝一样飞走了，或者是被异世界的魔王抓走了。
+                </p>
+            </div>
+
+            <!-- 行动按钮 -->
+            <div class="flex items-center gap-4">
+                <button
+                    onclick="history.back()"
+                    class="px-6 py-3 bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/20 rounded-xl font-bold text-anime-dark dark:text-white shadow-comic dark:shadow-none hover:-translate-y-1 transition-transform flex items-center gap-2"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    返回上一步
+                </button>
+
+                <a
+                    href="/"
+                    class="px-6 py-3 bg-anime-pink text-white border-2 border-anime-dark dark:border-anime-pink rounded-xl font-bold shadow-comic hover:shadow-comic-hover hover:-translate-y-1 transition-all flex items-center gap-2"
+                >
+                    <Home className="w-4 h-4" />
+                    回新手村 (首页)
+                </a>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

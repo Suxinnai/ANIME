@@ -1,0 +1,81 @@
+---
+const today = new Date();
+---
+
+<footer
+    class="border-t border-anime-dark/10 dark:border-white/5 bg-white dark:bg-[#121212] py-12 transition-colors duration-500"
+>
+    <div class="container-custom">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="md:col-span-1">
+                <a href="/" class="flex items-center gap-2 group">
+                    <span
+                        class="text-xl font-display font-bold tracking-tight text-anime-dark dark:text-white group-hover:text-anime-pink transition-colors"
+                    >
+                        ANIME<span class="text-anime-blue">.LOG</span>
+                    </span>
+                </a>
+                <p
+                    class="mt-4 text-anime-dark/60 dark:text-gray-400 text-sm max-w-xs leading-relaxed font-medium"
+                >
+                    喜欢把日常写成微光，把思绪折成风。<br
+                    />愿在时光里慢慢生长，与你不期而遇。
+                </p>
+            </div>
+
+            <div class="md:col-span-2 flex md:justify-end items-center">
+                <div class="text-right">
+                    <h3
+                        class="font-bold text-sm uppercase tracking-wider mb-4 text-anime-dark dark:text-white"
+                    >
+                        追踪
+                    </h3>
+                    <ul
+                        class="flex gap-6 text-sm text-anime-dark/70 dark:text-gray-400"
+                    >
+                        <li>
+                            <a
+                                href="https://github.com"
+                                target="_blank"
+                                class="hover:text-anime-pink dark:hover:text-anime-pink transition-colors"
+                                >GitHub</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-anime-pink dark:hover:text-anime-pink transition-colors"
+                                >小红书</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="/rss.xml"
+                                class="hover:text-anime-pink dark:hover:text-anime-pink transition-colors"
+                                >RSS 订阅</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="mt-12 pt-8 border-t border-anime-dark/5 dark:border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-anime-dark/40 dark:text-gray-600 gap-4 font-mono"
+        >
+            <p>&copy; {today.getFullYear()} Suxinnai. 保留所有权利。</p>
+            <div class="flex space-x-6">
+                <a
+                    href="/privacy"
+                    class="hover:text-anime-dark dark:hover:text-gray-300 transition-colors"
+                    >隐私政策</a
+                >
+                <a
+                    href="/terms"
+                    class="hover:text-anime-dark dark:hover:text-gray-300 transition-colors"
+                    >使用条款</a
+                >
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,551 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+    User,
+    Code,
+    Zap,
+    Coffee,
+    Terminal,
+    Cpu,
+    Heart,
+    Laptop,
+    Tablet,
+    Smartphone,
+    Bot,
+    Sparkles,
+    Github,
+} from "lucide-react";
+
+// 技能列表 (根据您的描述修改)
+const skills = [{ name: "我好多都不会", icon: "😭", level: "Learning..." }];
+
+// 工具列表 (新增)
+const tools = [
+    { name: "ChatGPT", icon: Bot, level: "Lv. MAX" },
+    { name: "Gemini", icon: Sparkles, level: "Lv. MAX" },
+];
+
+// 装备列表 (小米全家桶)
+const equipment = [
+    { slot: "电脑", name: "Redmi Book Pro 15", icon: Laptop },
+    { slot: "平板", name: "Xiaomi Pad 6S Pro", icon: Tablet },
+    { slot: "手机", name: "Xiaomi 13", icon: Smartphone },
+    { slot: "精神状态", name: "Emo Capybara", image: "/capybara.png" },
+];
+---
+
+<BaseLayout
+    title="角色属性 | About"
+    description="查看 Suxinnai 的详细属性面板。"
+>
+    <section
+        class="container-custom py-20 min-h-[80vh] flex items-center justify-center"
+    >
+        <!-- Main Status Window -->
+        <div
+            class="w-full max-w-5xl bg-white dark:bg-[#1e1e1e] border-4 border-anime-dark dark:border-white/20 rounded-3xl shadow-comic dark:shadow-none p-6 md:p-10 relative overflow-hidden transition-colors duration-500"
+        >
+            <!-- Grid Pattern Background -->
+            <div
+                class="absolute inset-0 opacity-5 pointer-events-none"
+                style="background-image: radial-gradient(#2B2D42 1px, transparent 1px); background-size: 20px 20px;"
+            >
+            </div>
+
+            <!-- Decorative Header Bar -->
+            <div
+                class="absolute top-0 left-0 right-0 h-8 bg-anime-dark dark:bg-white/10 flex items-center px-4 justify-between transition-colors"
+            >
+                <span class="text-white font-display text-xs tracking-widest"
+                    >状态面板 (STATUS)</span
+                >
+                <div class="flex gap-2">
+                    <div
+                        class="w-3 h-3 rounded-full bg-red-400 border border-white/50"
+                    >
+                    </div>
+                    <div
+                        class="w-3 h-3 rounded-full bg-yellow-400 border border-white/50"
+                    >
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-10"
+            >
+                <!-- Left Column: Avatar & Basic Info -->
+                <div
+                    class="lg:col-span-5 flex flex-col items-center text-center"
+                >
+                    <div
+                        class="relative w-64 h-64 md:w-80 md:h-80 mb-6 group cursor-pointer"
+                    >
+                        <!-- Animated Ring -->
+                        <div
+                            class="absolute inset-0 border-4 border-dashed border-anime-pink rounded-full animate-spin-slow opacity-50 dark:opacity-80"
+                        >
+                        </div>
+                        <div
+                            class="absolute inset-2 border-2 border-anime-blue rounded-full"
+                        >
+                        </div>
+
+                        <!-- Avatar Image -->
+                        <img
+                            src="/mascot.jpg"
+                            alt="Avatar"
+                            class="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-cover rounded-full border-4 border-anime-dark dark:border-white/20 shadow-inner"
+                        />
+
+                        <!-- Level Badge -->
+                        <div
+                            class="absolute bottom-4 right-4 bg-anime-yellow text-anime-dark font-display font-bold py-1 px-3 border-2 border-anime-dark rounded-lg shadow-comic-sm z-10 rotate-3 group-hover:rotate-0 transition-transform"
+                        >
+                            Lv. 6
+                        </div>
+                    </div>
+
+                    <h1
+                        class="text-4xl font-display font-bold text-anime-dark dark:text-white mb-2"
+                    >
+                        Suxinnai
+                    </h1>
+                    <p
+                        class="text-anime-dark/60 dark:text-gray-400 font-bold font-display uppercase tracking-wider mb-6 flex items-center gap-2"
+                    >
+                        <span
+                            class="w-2 h-2 rounded-full bg-green-400 animate-pulse"
+                        ></span>
+                        职业：全栈开发者
+                    </p>
+
+                    <!-- HP/MP Bars -->
+                    <div class="w-full space-y-3 max-w-xs mb-6">
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="font-bold text-xs w-6 text-anime-dark dark:text-gray-400"
+                                >HP</span
+                            >
+                            <div
+                                class="flex-grow h-4 bg-gray-200 dark:bg-white/10 rounded-full border border-anime-dark dark:border-white/20 overflow-hidden relative"
+                            >
+                                <div
+                                    class="absolute top-0 left-0 h-full bg-red-400 w-[80%] shadow-[0_0_10px_rgba(248,113,113,0.5)]"
+                                >
+                                </div>
+                                <span
+                                    class="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-white drop-shadow-md"
+                                    >3200 / 4000</span
+                                >
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="font-bold text-xs w-6 text-anime-dark dark:text-gray-400"
+                                >MP</span
+                            >
+                            <div
+                                class="flex-grow h-4 bg-gray-200 dark:bg-white/10 rounded-full border border-anime-dark dark:border-white/20 overflow-hidden relative"
+                            >
+                                <div
+                                    class="absolute top-0 left-0 h-full bg-blue-400 w-[95%] shadow-[0_0_10px_rgba(96,165,250,0.5)]"
+                                >
+                                </div>
+                                <span
+                                    class="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-white drop-shadow-md"
+                                    >9999 / 9999</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div
+                        class="flex items-center justify-center gap-3 w-full max-w-xs transition-all"
+                    >
+                        <!-- Twitter -->
+                        <a
+                            href="https://x.com/Suxinnai_"
+                            target="_blank"
+                            class="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-black text-white rounded-xl border-2 border-transparent hover:border-anime-dark/20 dark:hover:border-white/30 hover:-translate-y-1 shadow-sm hover:shadow-md transition-all text-xs font-bold group"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="w-4 h-4"
+                                ><path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                                ></path></svg
+                            >
+                            <span class="hidden sm:inline">Twitter</span>
+                        </a>
+
+                        <!-- GitHub -->
+                        <a
+                            href="https://github.com/Suxinnai"
+                            target="_blank"
+                            class="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-[#171515] text-white rounded-xl border-2 border-transparent hover:border-anime-dark/20 dark:hover:border-white/30 hover:-translate-y-1 shadow-sm hover:shadow-md transition-all text-xs font-bold group"
+                        >
+                            <Github className="w-4 h-4" />
+                            <span class="hidden sm:inline">GitHub</span>
+                        </a>
+
+                        <!-- 小红书 (Xiaohongshu) -->
+                        <a
+                            href="https://www.xiaohongshu.com/user/profile/5f65b0aa0000000001009fd3"
+                            target="_blank"
+                            class="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-[#FF2442] text-white rounded-xl border-2 border-transparent hover:border-anime-dark/20 dark:hover:border-white/30 hover:-translate-y-1 shadow-sm hover:shadow-md transition-all text-xs font-bold relative overflow-hidden group"
+                        >
+                            <!-- 抖音色块背景 -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-[#ff2442] to-[#ff2442] opacity-0 group-hover:opacity-20 transition-opacity"
+                            >
+                            </div>
+                            <span
+                                class="font-black text-lg leading-none transform group-hover:rotate-12 transition-transform"
+                                >红</span
+                            >
+                            <span class="hidden sm:inline">小红书</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Details -->
+                <div class="lg:col-span-7 flex flex-col gap-8">
+                    <!-- Bio Description -->
+                    <div
+                        class="bg-anime-bg dark:bg-black/20 p-6 rounded-xl border-2 border-anime-dark dark:border-white/10 shadow-sm relative"
+                    >
+                        <div
+                            class="absolute -top-3 left-4 bg-white dark:bg-[#1e1e1e] px-2 font-bold text-sm text-anime-pink border border-anime-pink rounded"
+                        >
+                            简介 (BIO)
+                        </div>
+                        <p
+                            class="text-anime-dark/80 dark:text-gray-300 leading-relaxed font-body italic"
+                        >
+                            “喜欢把日常写成微光，把思绪折成风。<br
+                                class="hidden md:block"
+                            />
+                            温柔却有锋芒，安静也很坚定；<br
+                                class="hidden md:block"
+                            />
+                            愿在时光里慢慢生长，与你不期而遇。”
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Custom Radar Chart -->
+                        <div
+                            class="flex flex-col items-center justify-center bg-white dark:bg-white/5 border border-anime-dark/20 dark:border-white/10 rounded-2xl p-4"
+                        >
+                            <h3
+                                class="font-display font-bold text-sm mb-4 text-anime-dark dark:text-white flex items-center gap-2"
+                            >
+                                <Zap className="w-4 h-4 text-anime-yellow" /> 基础属性
+                            </h3>
+                            <!-- SVG Radar Chart -->
+                            <svg
+                                viewBox="0 0 200 200"
+                                class="w-48 h-48 overflow-visible"
+                            >
+                                <polygon
+                                    points="100,20 170,60 170,140 100,180 30,140 30,60"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></polygon>
+                                <polygon
+                                    points="100,40 152,70 152,130 100,160 48,130 48,70"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10 opacity-50"
+                                ></polygon>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="100"
+                                    y2="20"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="170"
+                                    y2="60"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="170"
+                                    y2="140"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="100"
+                                    y2="180"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="30"
+                                    y2="140"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+                                <line
+                                    x1="100"
+                                    y1="100"
+                                    x2="30"
+                                    y2="60"
+                                    stroke="#e5e7eb"
+                                    stroke-width="1"
+                                    class="dark:stroke-white/10"></line>
+
+                                <polygon
+                                    points="100,35 155,70 160,135 100,150 40,132 38,68"
+                                    fill="rgba(255, 143, 171, 0.4)"
+                                    stroke="#FF8FAB"
+                                    stroke-width="2"
+                                    class="animate-pulse"></polygon>
+
+                                <text
+                                    x="100"
+                                    y="15"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >力量</text
+                                >
+                                <text
+                                    x="180"
+                                    y="60"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >智力</text
+                                >
+                                <text
+                                    x="180"
+                                    y="145"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >敏捷</text
+                                >
+                                <text
+                                    x="100"
+                                    y="195"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >幸运</text
+                                >
+                                <text
+                                    x="20"
+                                    y="145"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >耐力</text
+                                >
+                                <text
+                                    x="20"
+                                    y="60"
+                                    text-anchor="middle"
+                                    font-size="10"
+                                    font-weight="bold"
+                                    fill="currentColor"
+                                    class="text-anime-dark dark:text-gray-300"
+                                    >精神</text
+                                >
+                            </svg>
+                        </div>
+
+                        <!-- Current Quest / Active Skills / Tools -->
+                        <div class="flex flex-col gap-6">
+                            <!-- Current Quest -->
+                            <div
+                                class="bg-blue-50 dark:bg-blue-900/20 p-4 border-l-4 border-anime-blue rounded-r-lg"
+                            >
+                                <h3
+                                    class="font-bold text-xs uppercase tracking-wider text-anime-blue mb-1"
+                                >
+                                    当前任务
+                                </h3>
+                                <p
+                                    class="font-bold text-anime-dark dark:text-white"
+                                >
+                                    校园论坛毕设
+                                </p>
+                                <p
+                                    class="text-xs text-anime-dark/60 dark:text-gray-400 mt-1"
+                                >
+                                    进度: 50% (Coding...)
+                                </p>
+                            </div>
+
+                            <!-- Active Skills -->
+                            <div>
+                                <h3
+                                    class="flex items-center gap-2 text-xs font-bold text-anime-pink uppercase mb-3"
+                                >
+                                    <Code className="w-4 h-4" />
+                                    技能树
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 rounded-lg text-xs font-bold shadow-sm"
+                                    >
+                                        😭 我好多都不会
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Learning Skills (New) -->
+                            <div>
+                                <h3
+                                    class="flex items-center gap-2 text-xs font-bold text-anime-yellow uppercase mb-3"
+                                >
+                                    <Sparkles className="w-4 h-4" />
+                                    修炼中 (Learning)
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <!-- Vue3 -->
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-500/30 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 shadow-sm relative overflow-hidden group"
+                                    >
+                                        <div
+                                            class="absolute inset-0 bg-emerald-200/20 dark:bg-emerald-400/10 w-[0%] group-hover:w-[100%] transition-all duration-1000"
+                                        >
+                                        </div>
+                                        <span class="relative z-10">Vue 3</span>
+                                        <div
+                                            class="w-3 h-3 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"
+                                        >
+                                        </div>
+                                    </span>
+
+                                    <!-- Python -->
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg text-xs font-bold text-blue-700 dark:text-blue-400 shadow-sm"
+                                    >
+                                        <span>Python</span>
+                                        <div class="flex gap-0.5 items-end h-2">
+                                            <div
+                                                class="w-0.5 h-1 bg-current animate-bounce"
+                                            >
+                                            </div>
+                                            <div
+                                                class="w-0.5 h-2 bg-current animate-bounce [animation-delay:0.1s]"
+                                            >
+                                            </div>
+                                            <div
+                                                class="w-0.5 h-1.5 bg-current animate-bounce [animation-delay:0.2s]"
+                                            >
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Tools -->
+                            <div>
+                                <h3
+                                    class="flex items-center gap-2 text-xs font-bold text-anime-blue uppercase mb-3"
+                                >
+                                    <Bot className="w-4 h-4" />
+                                    辅助工具
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-500/30 rounded-lg text-xs font-bold text-sky-700 dark:text-sky-400 shadow-sm"
+                                    >
+                                        <Sparkles className="w-3 h-3" /> ChatGPT
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-500/30 rounded-lg text-xs font-bold text-purple-700 dark:text-purple-400 shadow-sm"
+                                    >
+                                        <Sparkles className="w-3 h-3" /> Gemini
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment List (Bottom Full Width) -->
+                <div class="lg:col-span-12 mt-2">
+                    <h3
+                        class="font-display font-bold text-xl mb-4 flex items-center gap-2 text-anime-dark dark:text-white"
+                    >
+                        <Cpu className="w-5 h-5 text-anime-pink" /> 装备栏
+                    </h3>
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
+                        {
+                            equipment.map((item) => (
+                                <div class="flex items-center gap-3 bg-white dark:bg-white/5 p-3 border border-anime-dark/20 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md transition-shadow group">
+                                    <div class="w-10 h-10 bg-anime-bg dark:bg-black/30 border border-anime-dark/10 dark:border-white/10 rounded-lg flex items-center justify-center text-anime-dark dark:text-white group-hover:scale-110 transition-transform overflow-hidden">
+                                        {item.image ? (
+                                            <img
+                                                src={item.image}
+                                                alt={item.name}
+                                                class="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <item.icon className="w-5 h-5" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                            {item.slot}
+                                        </div>
+                                        <div class="font-bold text-sm text-anime-dark dark:text-gray-200 line-clamp-1">
+                                            {item.name}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }
+    </style>
+</BaseLayout>

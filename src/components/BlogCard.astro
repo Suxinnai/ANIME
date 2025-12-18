@@ -1,0 +1,91 @@
+---
+import { Calendar, Tag, ArrowRight } from "lucide-react";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const formattedDate = post.data.pubDate.toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+---
+
+<article
+    class="group relative flex flex-col bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/10 rounded-xl overflow-hidden shadow-comic dark:shadow-none hover:shadow-comic-hover hover:-translate-y-1 transition-all duration-300"
+>
+    <!-- 图片区域链接到全文 -->
+    <a
+        href={`/blog/${post.slug}/`}
+        class="relative aspect-[16/10] overflow-hidden border-b-2 border-anime-dark dark:border-white/5 block"
+    >
+        <div
+            class="absolute inset-0 bg-anime-dark/0 group-hover:bg-anime-dark/10 transition-colors z-10"
+        >
+        </div>
+        <img
+            src={post.data.coverImage}
+            alt={post.data.title}
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+    </a>
+
+    <!-- 标签浮动层 (绝对定位但允许点击) -->
+    <div class="absolute top-3 right-3 z-20 flex gap-2 pointer-events-auto">
+        {
+            post.data.tags.slice(0, 1).map((tag) => (
+                <a
+                    href={`/tags/${tag}`}
+                    class="px-3 py-1 bg-anime-yellow text-anime-dark border border-anime-dark text-xs font-display font-bold shadow-comic-sm -rotate-2 hover:rotate-0 hover:scale-110 transition-transform cursor-pointer relative z-30"
+                >
+                    #{tag}
+                </a>
+            ))
+        }
+    </div>
+
+    <div
+        class="p-5 flex flex-col flex-grow relative bg-white dark:bg-[#1e1e1e] transition-colors duration-300"
+    >
+        <!-- 装饰性半调背景 -->
+        <div
+            class="absolute top-0 right-0 w-16 h-16 opacity-10 dark:opacity-5 pointer-events-none"
+            style="background-image: radial-gradient(#2B2D42 1px, transparent 1px); background-size: 4px 4px;"
+        >
+        </div>
+
+        <div
+            class="flex items-center gap-2 text-xs text-anime-dark/60 dark:text-gray-400 font-bold mb-3"
+        >
+            <Calendar className="w-3.5 h-3.5" />
+            <time>{formattedDate}</time>
+        </div>
+
+        <!-- 标题链接到全文 -->
+        <a href={`/blog/${post.slug}/`}>
+            <h3
+                class="text-xl font-display text-anime-dark dark:text-white font-bold leading-tight mb-3 line-clamp-2 group-hover:text-anime-pink transition-colors"
+            >
+                {post.data.title}
+            </h3>
+        </a>
+
+        <p
+            class="text-anime-dark/70 dark:text-gray-400 text-sm line-clamp-2 mb-4 flex-grow font-body"
+        >
+            {post.data.description}
+        </p>
+
+        <div class="mt-auto flex items-center justify-end">
+            <a
+                href={`/blog/${post.slug}/`}
+                class="inline-flex items-center text-sm font-bold text-anime-blue dark:text-anime-blue group-hover:underline decoration-2 underline-offset-4"
+            >
+                READ MORE <ArrowRight className="ml-1 w-4 h-4" />
+            </a>
+        </div>
+    </div>
+</article>

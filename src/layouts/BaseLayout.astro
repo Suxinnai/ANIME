@@ -1,0 +1,70 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import SEO from "../components/SEO.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+    title: string;
+    description?: string;
+    image?: string;
+}
+
+const { title, description, image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="scroll-smooth">
+    <head>
+        <SEO title={title} description={description} image={image} />
+        <ViewTransitions />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <!-- 引入 Fredoka One (英文标题), Nunito (正文), ZCOOL KuaiLe (中文手写标题) -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&family=ZCOOL+KuaiLe&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body
+        class="flex flex-col min-h-screen bg-anime-bg text-anime-text overflow-x-hidden selection:bg-anime-pink selection:text-white"
+    >
+        <!-- 背景装饰：半调网点 -->
+        <div
+            class="fixed inset-0 z-[-1] opacity-[0.03] pointer-events-none"
+            style="background-image: radial-gradient(#2B2D42 1px, transparent 1px); background-size: 20px 20px;"
+        >
+        </div>
+
+        <Header />
+
+        <main class="flex-grow pt-28 pb-16 px-4">
+            <slot />
+        </main>
+
+        <Footer />
+
+        <script is:inline>
+            // 保持暗黑模式逻辑，虽然日系风格通常以亮色为主，但我们保留切换能力
+            // 该逻辑可根据新的设计需求调整，目前先兼容
+            const theme = (() => {
+                if (
+                    typeof localStorage !== "undefined" &&
+                    localStorage.getItem("theme")
+                ) {
+                    return localStorage.getItem("theme");
+                }
+                return "light"; // 默认亮色更符合日系风格
+            })();
+
+            if (theme === "light") {
+                document.documentElement.classList.remove("dark");
+            } else {
+                document.documentElement.classList.add("dark");
+            }
+
+            window.localStorage.setItem("theme", theme);
+        </script>
+    </body>
+</html>

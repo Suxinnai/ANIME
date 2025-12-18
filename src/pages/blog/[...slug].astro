@@ -1,0 +1,150 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Calendar, ArrowLeft, Clock, List } from "lucide-react";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+
+const formattedDate = post.data.pubDate.toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
+// Calculate reading time (assuming 300 words per minute for mixed en/cn)
+const wordCount = post.body.length;
+const readingTime = Math.ceil(wordCount / 300);
+---
+
+<BaseLayout
+    title={post.data.title}
+    description={post.data.description}
+    image={post.data.coverImage}
+>
+    <article class="container-custom py-12 md:py-20">
+        <!-- Back Button -->
+        <a
+            href="/blog"
+            class="inline-flex items-center text-sm font-medium text-anime-dark/60 dark:text-gray-400 hover:text-anime-pink dark:hover:text-anime-pink transition-colors mb-8 group"
+        >
+            <ArrowLeft
+                className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1"
+            />
+            返回博客列表
+        </a>
+
+        <!-- Header -->
+        <header class="max-w-4xl mx-auto text-center mb-12">
+            <div
+                class="inline-flex items-center gap-4 text-anime-dark/60 dark:text-gray-400 text-sm font-medium mb-6 justify-center"
+            >
+                <div class="flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4" />
+                    <time datetime={post.data.pubDate.toISOString()}>
+                        {formattedDate}
+                    </time>
+                </div>
+                <span class="w-1 h-1 rounded-full bg-current opacity-50"></span>
+                <div class="flex items-center gap-1.5">
+                    <Clock className="w-4 h-4" />
+                    <span>约 {readingTime} 分钟阅读</span>
+                </div>
+            </div>
+
+            <h1
+                class="text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8 text-anime-dark dark:text-white"
+            >
+                {post.data.title}
+            </h1>
+
+            <div class="flex flex-wrap justify-center gap-2">
+                {
+                    post.data.tags.map((tag) => (
+                        <span class="px-3 py-1 bg-anime-bg dark:bg-white/10 text-anime-dark dark:text-gray-200 text-xs font-bold uppercase tracking-wider rounded-lg border border-anime-dark/5 dark:border-white/10">
+                            {tag}
+                        </span>
+                    ))
+                }
+            </div>
+        </header>
+
+        <!-- Cover Image -->
+        <div
+            class="max-w-5xl mx-auto mb-16 rounded-3xl overflow-hidden shadow-comic dark:shadow-none border-2 border-anime-dark dark:border-white/10"
+        >
+            <img
+                src={post.data.coverImage}
+                alt={post.data.title}
+                class="w-full aspect-[21/9] object-cover"
+            />
+        </div>
+
+        <!-- Main Content Area with Sidebar -->
+        <div
+            class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-12 items-start"
+        >
+            <!-- Article Content -->
+            <div
+                class="prose prose-lg prose-slate dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-headings:scroll-mt-24 prose-a:text-anime-pink dark:prose-a:text-anime-pink hover:prose-a:text-anime-dark dark:hover:prose-a:text-white prose-img:rounded-xl prose-img:shadow-sm max-w-none"
+            >
+                <Content />
+            </div>
+
+            <!-- Sidebar (TOC) -->
+            <aside class="hidden lg:block sticky top-24">
+                <div
+                    class="bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/10 rounded-xl p-5 shadow-sm"
+                >
+                    <h3
+                        class="font-display font-bold text-anime-dark dark:text-white mb-4 flex items-center gap-2"
+                    >
+                        <List className="w-5 h-5 text-anime-pink" />
+                        目录导航
+                    </h3>
+                    <ul
+                        class="space-y-2 text-sm max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar"
+                    >
+                        {
+                            headings.map((heading) => (
+                                <li class={`pl-${(heading.depth - 1) * 3}`}>
+                                    <a
+                                        href={`#${heading.slug}`}
+                                        class="block text-anime-dark/70 dark:text-gray-400 hover:text-anime-pink dark:hover:text-anime-pink transition-colors line-clamp-2 border-l-2 border-transparent hover:border-anime-pink pl-2 -ml-[2px]"
+                                    >
+                                        {heading.text}
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </article>
+</BaseLayout>
+
+<style>
+    /* Custom Scrollbar for TOC */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #334155;
+    }
+</style>

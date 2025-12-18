@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getCollection } from "astro:content";
+import { Tag, ArrowLeft } from "lucide-react";
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection("blog");
+    const uniqueTags = [
+        ...new Set(allPosts.map((post) => post.data.tags).flat()),
+    ];
+
+    return uniqueTags.map((tag) => {
+        const filteredPosts = allPosts.filter((post) =>
+            post.data.tags.includes(tag),
+        );
+        return {
+            params: { tag },
+            props: { posts: filteredPosts },
+        };
+    });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout title={`Tag: ${tag}`} description={`Posts tagged with ${tag}`}>
+    <section class="container-custom py-20">
+        <div class="mb-12">
+            <a
+                href="/blog"
+                class="inline-flex items-center text-sm font-bold text-anime-dark/60 hover:text-anime-pink mb-6 transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4 mr-1" /> Back to Blog
+            </a>
+
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-16 h-16 bg-anime-yellow border-2 border-anime-dark rounded-full flex items-center justify-center shadow-comic animate-bounce-slow"
+                >
+                    <Tag className="w-8 h-8 text-anime-dark" />
+                </div>
+                <div>
+                    <h1 class="text-4xl font-display font-bold text-anime-dark">
+                        #{tag}
+                    </h1>
+                    <p class="text-anime-dark/60 font-bold">
+                        {posts.length}
+                        {posts.length === 1 ? "Post" : "Posts"} Found
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => <BlogCard post={post} />)}
+        </div>
+    </section>
+</BaseLayout>
