@@ -56,14 +56,16 @@ export default function DigitalTwinReact() {
     };
     const NetworkIcon = getNetworkIcon(data.network);
 
-    // 当前应用
-    const currentApp = data.app || "System Idle";
+    // 当前应用 (Header Always Shows Activate App)
+    const activeApp = data.app || "System Idle";
 
-    // 识别是否在听歌
-    const isPlayingMusic = currentApp.includes('🎵') || (data.pkg && (data.pkg.includes('Music') || data.pkg.includes('Spotify') || data.pkg.includes('网易云') || data.pkg.includes('QQ音乐')));
+    // 音乐检测 (Bottom Widget Only)
+    const currentTrack = data.track;
+    const isPlayingMusic = !!currentTrack;
 
-    // 去除歌名中的 🎵 前缀用于显示
-    const displayAppName = currentApp.replace('🎵 ', '');
+    // 显示名称处理
+    // Header 使用 activeApp
+    // Bottom Widget 使用 currentTrack (if music)
 
     // 映射应用图标
     const getAppIcon = (appName) => {
@@ -94,7 +96,7 @@ export default function DigitalTwinReact() {
     };
     const statusText = getStatusText();
 
-    const AppIcon = getAppIcon(currentApp);
+    const AppIcon = getAppIcon(activeApp);
 
     return (
         <div className="relative group perspective-1000">
@@ -127,8 +129,8 @@ export default function DigitalTwinReact() {
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Active Task</span>
-                                <span className="text-[10px] font-black tracking-wide leading-none truncate w-full max-w-[150px]" title={displayAppName}>
-                                    {displayAppName}
+                                <span className="text-[10px] font-black tracking-wide leading-none truncate w-full max-w-[150px]" title={activeApp}>
+                                    {activeApp}
                                 </span>
                             </div>
                             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse ml-1 flex-shrink-0"></div>
@@ -205,7 +207,7 @@ export default function DigitalTwinReact() {
                                 {/* Scrolling Title */}
                                 <div className="w-full overflow-hidden whitespace-nowrap mask-linear-fade">
                                     <span className="text-[11px] font-bold text-anime-dark dark:text-white inline-block animate-[scroll_10s_linear_infinite]">
-                                        {data.pkg || displayAppName} &nbsp;&nbsp;&nbsp; {data.pkg || displayAppName}
+                                        {currentTrack} &nbsp;&nbsp;&nbsp; {currentTrack}
                                     </span>
                                 </div>
                                 {/* Status / Artist (Showing AI Mood as Pseudo-Lyrics) */}

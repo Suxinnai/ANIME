@@ -204,6 +204,7 @@ def sync_loop():
                 display_text = active_window[:20] + "..."
 
             # 3. AI 生成 (减少频率，只有状态根本改变时才生成)
+            # AI 的上下文：如果有音乐，用音乐生成心情；否则用当前应用
             ai_context_key = music_context if is_music_mode else active_window
             
             # 只有当状态改变，或者每隔 5 分钟 (100次循环) 重新生成一次以保持新鲜感
@@ -214,9 +215,15 @@ def sync_loop():
                 last_ai_text = ai_mood
             
             # 4. 发送数据
+            # 逻辑分离：
+            # app: 始终显示前台窗口 (灵动岛用)
+            # track: 音乐信息 (右下角用)
+            # category: 当前应用的分类 (图标用) - 如果在听歌，右下角会覆盖 category 显示 CD 样式，但图标仍可保留
+            
             payload = {
-                "app": display_text,         # 前端显示的大标题
-                "pkg": pkg_name,             # 详细包名/标题
+                "app": active_window,        # 灵动岛始终显示前台应用
+                "pkg": active_window,        # 兼容旧逻辑
+                "track": music_context if is_music_mode else None, # 新增：专门的音乐字段
                 "mood": last_ai_text,        # AI 吐槽
                 "category": app_category,    # 应用分类
                 "network": current_network,
@@ -228,7 +235,7 @@ def sync_loop():
             url = f"{API_URL}?secret={SECRET}"
             requests.post(url, json=payload, timeout=5, verify=False)
             
-            print(f"Synced: {display_text} | Cat: {app_category} | Net: {current_network}")
+            print(f"Synced: App={active_window} | Music={music_context if is_music_mode else 'None'} | Cat={app_category}")
             
         except Exception as e:
             print(f"Sync Logic Error: {e}")
