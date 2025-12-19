@@ -33,6 +33,7 @@ client = OpenAI(
 
 user32 = ctypes.windll.user32
 
+# ================= 辅助函数 =================
 def get_active_window_title():
     try:
         hwnd = user32.GetForegroundWindow()
@@ -43,29 +44,56 @@ def get_active_window_title():
     except:
         return ""
 
+def get_all_window_titles():
+    titles = []
+    def foreach_window(hwnd, lParam):
+        if user32.IsWindowVisible(hwnd):
+            length = user32.GetWindowTextLengthW(hwnd)
+            buff = ctypes.create_unicode_buffer(length + 1)
+            user32.GetWindowTextW(hwnd, buff, length + 1)
+            if buff.value:
+                titles.append(buff.value)
+        return True
+    
+    EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int))
+    user32.EnumWindows(EnumWindowsProc(foreach_window), 0)
+    return titles
+
+def find_music_info(active_title):
+    # 1. 优先检查当前前台窗口
+    if " - " in active_title and ("Music" in active_title or "Spotify" in active_title or "网易云" in active_title or "QQ音乐" in active_title):
+        return True, active_title
+
+    # 2. 如果前台不是音乐，遍历所有后台窗口查找播放器
+    # 这一步能检测到后台播放的 QQ 音乐或网易云（前提是它们更新了窗口标题）
+    all_titles = get_all_window_titles()
+    for t in all_titles:
+        if " - " in t:
+             if "QQ音乐" in t or "网易云音乐" in t or "Spotify" in t:
+                 return True, t
+    
+    return False, ""
+
 def get_network_type():
     try:
         stats = psutil.net_if_stats()
-        # 优先检测有线，因为有线通常更稳定
+        # 优先检测有线
         for interface, status in stats.items():
             if status.isup:
-                lower_name = interface.lower()
-                if "ethernet" in lower_name or "以太网" in lower_name:
+                lower = interface.lower()
+                if "ethernet" in lower or "以太网" in lower:
                     return "Ethernet"
-        
         # 其次检测 WiFi
         for interface, status in stats.items():
             if status.isup:
-                lower_name = interface.lower()
-                if "wi-fi" in lower_name or "wlan" in lower_name or "无线" in lower_name:
+                lower = interface.lower()
+                if "wi-fi" in lower or "wlan" in lower or "无线" in lower:
                     return "WiFi"
-        
-        # 如果有其他连接但不是上面两种（比如 VPN），统称 Online
+        # 其他
         for interface, status in stats.items():
             if status.isup and "loopback" not in interface.lower():
                 return "Online"
-                
-    except Exception:
+    except:
         pass
     return "Offline"
 
@@ -99,47 +127,50 @@ def sync_loop():
 
     while True:
         try:
-            # 获取前台窗口标题
+            # 1. 获取基础信息
             active_window = get_active_window_title() or "Desktop"
-            
-            # 检测网络状态
             current_network = get_network_type()
 
-            # --- 智能推断逻辑 (无需 winsdk) ---
+            # 2. 智能状态推断
             display_text = active_window
+            pkg_name = active_window
             is_music_mode = False
             
-            # 常见音乐软件标题规则匹配
-            # 网易云: "七里香 - 周杰伦" (很多时候不带后缀，或者被播放器设置隐藏)
-            # Spotify: "Song Name - Artist"
-            # QQ音乐: "七里香 - QQ音乐"
-            
-            if " - " in active_window and ("Music" in active_window or "Spotify" in active_window or "网易云" in active_window or "QQ音乐" in active_window):
-                # 显式识别到音乐播放器
+            # 尝试检测音乐（前台或后台）
+            found_music, music_title = find_music_info(active_window)
+            if found_music:
                 is_music_mode = True
-                display_text = "🎵 " + active_window.split(" - ")[0] # 取前半部分
+                # 提取歌名： "七里香 - 周杰伦 - QQ音乐" -> "七里香 - 周杰伦"
+                # 通常取第一个 " - " 之前比较保险，或者保留歌手
+                # 这里我们简单保留 " - " 之前的内容作为主标题，完整标题作为上下文
+                if " - " in music_title:
+                   display_text = "🎵 " + music_title.split(" - ")[0]
+                else:
+                   display_text = "🎵 " + music_title
+                pkg_name = music_title # 完整标题传给 pkg 用于前端判断
+            
             elif "Visual Studio Code" in active_window:
-                display_text = "VS Code"
+                display_text = "Writing Code"
             elif "Chrome" in active_window or "Edge" in active_window:
                 display_text = "Browsing"
             elif len(active_window) > 20: 
                 display_text = active_window[:20] + "..."
 
-            # 4. AI 生成
-            ai_mood = last_ai_text
-            if active_window != last_context and active_window:
-                print(f"Status changed to: {active_window} (Music: {is_music_mode}), asking AI...")
-                ai_mood = generate_ai_status(display_text if is_music_mode else active_window, is_music_mode)
-                last_context = active_window
+            # 3. AI 生成 (减少频率，只有状态根本改变时才生成)
+            ai_context_key = music_title if is_music_mode else active_window
+            if ai_context_key != last_context:
+                print(f"State changed to: {ai_context_key}, asking AI...")
+                ai_mood = generate_ai_status(ai_context_key, is_music_mode)
+                last_context = ai_context_key
                 last_ai_text = ai_mood
-
-            # 5. 发送
+            
+            # 4. 发送数据
             payload = {
-                "app": display_text,
-                "pkg": active_window, 
-                "mood": ai_mood,
+                "app": display_text,     # 前端显示的大标题
+                "pkg": pkg_name,         # 详细包名/标题
+                "mood": last_ai_text,    # AI 吐槽
                 "network": current_network,
-                "device": "RedmiBook Pro 15",
+                "device": "RedmiBook Pro 15 2021",
                 "location": "重庆",
                 "isCharging": True
             }
@@ -147,10 +178,12 @@ def sync_loop():
             url = f"{API_URL}?secret={SECRET}"
             requests.post(url, json=payload, timeout=5, verify=False)
             
-            print(f"Synced: {display_text} | Net: {current_network} | AI: {ai_mood}")
+            print(f"Synced: {display_text} | Net: {current_network} | AI: {last_ai_text[:10]}...")
             
         except Exception as e:
             print(f"Sync Logic Error: {e}")
+            import traceback
+            traceback.print_exc()
 
         time.sleep(5)
 
