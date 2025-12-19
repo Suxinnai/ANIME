@@ -5,8 +5,15 @@ import json
 import ctypes
 import urllib3
 import os
+import psutil
 from openai import OpenAI
 from ctypes import wintypes
+
+# 尝试导入 winsdk，如果没安装则提示
+try:
+    from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager
+except ImportError:
+    pass
 
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -36,15 +43,41 @@ def get_active_window_title():
     except:
         return ""
 
+def get_network_type():
+    try:
+        stats = psutil.net_if_stats()
+        # 优先检测有线，因为有线通常更稳定
+        for interface, status in stats.items():
+            if status.isup:
+                lower_name = interface.lower()
+                if "ethernet" in lower_name or "以太网" in lower_name:
+                    return "Ethernet"
+        
+        # 其次检测 WiFi
+        for interface, status in stats.items():
+            if status.isup:
+                lower_name = interface.lower()
+                if "wi-fi" in lower_name or "wlan" in lower_name or "无线" in lower_name:
+                    return "WiFi"
+        
+        # 如果有其他连接但不是上面两种（比如 VPN），统称 Online
+        for interface, status in stats.items():
+            if status.isup and "loopback" not in interface.lower():
+                return "Online"
+                
+    except Exception:
+        pass
+    return "Offline"
+
 def generate_ai_status(context_text, is_music=False):
     try:
         if not context_text: return "发呆中..."
         
         system_prompt = "你是一个活泼可爱的二次元少女（Suxinnai的数字分身）。"
         if is_music:
-            system_prompt += f"用户正在听歌，请评价这首歌或表达听歌的心情。歌名：{context_text}。风格要俏皮、颜文字。"
+            system_prompt += f"用户正在听歌，请评价这首歌或表达听歌的心情。歌名：{context_text}。风格要俏皮、颜文字。自称'Suxinnai'。"
         else:
-            system_prompt += "根据用户当前正在使用的电脑窗口标题，用一句话（15字以内）描述当前的状态。风格要俏皮、吐槽。"
+            system_prompt += "根据用户当前正在使用的电脑窗口标题，用一句话（15字以内）描述当前的状态。风格要俏皮、吐槽。自称'Suxinnai'（不要叫苏芯）。"
 
         completion = client.chat.completions.create(
             model="mimo-v2-flash",
@@ -69,6 +102,9 @@ def sync_loop():
             # 获取前台窗口标题
             active_window = get_active_window_title() or "Desktop"
             
+            # 检测网络状态
+            current_network = get_network_type()
+
             # --- 智能推断逻辑 (无需 winsdk) ---
             display_text = active_window
             is_music_mode = False
@@ -102,16 +138,16 @@ def sync_loop():
                 "app": display_text,
                 "pkg": active_window, 
                 "mood": ai_mood,
-                "network": "Ethernet",
-                "device": "Workstation",
-                "location": "Chongqing",
+                "network": current_network,
+                "device": "RedmiBook Pro 15",
+                "location": "重庆",
                 "isCharging": True
             }
 
             url = f"{API_URL}?secret={SECRET}"
             requests.post(url, json=payload, timeout=5, verify=False)
             
-            print(f"Synced: {display_text} | AI: {ai_mood}")
+            print(f"Synced: {display_text} | Net: {current_network} | AI: {ai_mood}")
             
         except Exception as e:
             print(f"Sync Logic Error: {e}")
