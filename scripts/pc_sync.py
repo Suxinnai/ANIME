@@ -6,14 +6,18 @@ import ctypes
 import urllib3
 import os
 import psutil
+import asyncio
 from openai import OpenAI
 from ctypes import wintypes
 
-# 尝试导入 winsdk，如果没安装则提示
+# 尝试导入 winrt 媒体控制 API
 try:
-    from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager
+    from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
+    WINRT_AVAILABLE = True
+    print("[Info] winrt media API loaded successfully!")
 except ImportError:
-    pass
+    WINRT_AVAILABLE = False
+    print("[Warning] winrt not available, falling back to window title detection.")
 
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -44,6 +48,44 @@ def get_active_window_title():
     except:
         return ""
 
+async def get_media_info_async():
+    """使用 Windows Media API 获取当前播放的媒体信息"""
+    if not WINRT_AVAILABLE:
+        return None, None, None
+    
+    try:
+        sessions = await MediaManager.request_async()
+        current_session = sessions.get_current_session()
+        
+        if current_session:
+            info = await current_session.try_get_media_properties_async()
+            
+            # 获取播放状态
+            playback_info = current_session.get_playback_info()
+            is_playing = playback_info.playback_status == 4  # 4 = Playing
+            
+            if info and is_playing:
+                title = info.title or ""
+                artist = info.artist or ""
+                return True, title, artist
+                
+    except Exception as e:
+        print(f"[Debug] Media API error: {e}")
+    
+    return False, None, None
+
+def get_media_info():
+    """同步包装器"""
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(get_media_info_async())
+        loop.close()
+        return result
+    except Exception as e:
+        print(f"[Debug] Async wrapper error: {e}")
+        return False, None, None
+
 def get_all_window_titles():
     titles = []
     def foreach_window(hwnd, lParam):
@@ -59,20 +101,6 @@ def get_all_window_titles():
     user32.EnumWindows(EnumWindowsProc(foreach_window), 0)
     return titles
 
-def find_music_info(active_title):
-    # 1. 优先检查当前前台窗口
-    if " - " in active_title and ("Music" in active_title or "Spotify" in active_title or "网易云" in active_title or "QQ音乐" in active_title):
-        return True, active_title
-
-    # 2. 如果前台不是音乐，遍历所有后台窗口查找播放器
-    # 这一步能检测到后台播放的 QQ 音乐或网易云（前提是它们更新了窗口标题）
-    all_titles = get_all_window_titles()
-    for t in all_titles:
-        if " - " in t:
-             if "QQ音乐" in t or "网易云音乐" in t or "Spotify" in t:
-                 return True, t
-    
-    return False, ""
 
 def get_network_type():
     try:
@@ -125,6 +153,8 @@ def sync_loop():
     last_context = ""
     last_ai_text = "Ready!"
 
+    print("Sync loop started. Press Ctrl+C to stop.")
+
     while True:
         try:
             # 1. 获取基础信息
@@ -135,29 +165,48 @@ def sync_loop():
             display_text = active_window
             pkg_name = active_window
             is_music_mode = False
+            music_context = ""
+            app_category = "other"  # 默认分类
             
-            # 尝试检测音乐（前台或后台）
-            found_music, music_title = find_music_info(active_window)
-            if found_music:
-                is_music_mode = True
-                # 提取歌名： "七里香 - 周杰伦 - QQ音乐" -> "七里香 - 周杰伦"
-                # 通常取第一个 " - " 之前比较保险，或者保留歌手
-                # 这里我们简单保留 " - " 之前的内容作为主标题，完整标题作为上下文
-                if " - " in music_title:
-                   display_text = "🎵 " + music_title.split(" - ")[0]
-                else:
-                   display_text = "🎵 " + music_title
-                pkg_name = music_title # 完整标题传给 pkg 用于前端判断
+            # 应用分类规则
+            lower_window = active_window.lower()
             
-            elif "Visual Studio Code" in active_window:
-                display_text = "Writing Code"
-            elif "Chrome" in active_window or "Edge" in active_window:
+            # 浏览器
+            if any(x in lower_window for x in ["chrome", "edge", "comet", "浏览器", "firefox"]):
+                app_category = "browser"
                 display_text = "Browsing"
-            elif len(active_window) > 20: 
+            # 通讯软件
+            elif any(x in lower_window for x in ["qq", "微信", "wechat", "telegram", "tim"]) and "qq音乐" not in lower_window:
+                app_category = "chat"
+                display_text = "Chatting"
+            # 编程软件
+            elif any(x in lower_window for x in ["visual studio code", "vscode", "cursor", "kiro", "antigravity", "pycharm", "intellij"]):
+                app_category = "coding"
+                display_text = "Coding"
+            
+            # 优先使用 Windows Media API 检测音乐 (覆盖上面的分类)
+            is_playing, song_title, song_artist = get_media_info()
+            
+            if is_playing and song_title:
+                is_music_mode = True
+                app_category = "music"
+                if song_artist:
+                    display_text = f"🎵 {song_title} - {song_artist}"
+                    music_context = f"{song_title} - {song_artist}"
+                else:
+                    display_text = f"🎵 {song_title}"
+                    music_context = song_title
+                pkg_name = music_context
+                print(f"[Media API] Detected: {music_context}")
+            
+            # 如果标题太长，截断
+            if app_category == "other" and len(active_window) > 20:
                 display_text = active_window[:20] + "..."
 
             # 3. AI 生成 (减少频率，只有状态根本改变时才生成)
-            ai_context_key = music_title if is_music_mode else active_window
+            ai_context_key = music_context if is_music_mode else active_window
+            
+            # 只有当状态改变，或者每隔 5 分钟 (100次循环) 重新生成一次以保持新鲜感
             if ai_context_key != last_context:
                 print(f"State changed to: {ai_context_key}, asking AI...")
                 ai_mood = generate_ai_status(ai_context_key, is_music_mode)
@@ -166,9 +215,10 @@ def sync_loop():
             
             # 4. 发送数据
             payload = {
-                "app": display_text,     # 前端显示的大标题
-                "pkg": pkg_name,         # 详细包名/标题
-                "mood": last_ai_text,    # AI 吐槽
+                "app": display_text,         # 前端显示的大标题
+                "pkg": pkg_name,             # 详细包名/标题
+                "mood": last_ai_text,        # AI 吐槽
+                "category": app_category,    # 应用分类
                 "network": current_network,
                 "device": "RedmiBook Pro 15 2021",
                 "location": "重庆",
@@ -178,14 +228,14 @@ def sync_loop():
             url = f"{API_URL}?secret={SECRET}"
             requests.post(url, json=payload, timeout=5, verify=False)
             
-            print(f"Synced: {display_text} | Net: {current_network} | AI: {last_ai_text[:10]}...")
+            print(f"Synced: {display_text} | Cat: {app_category} | Net: {current_network}")
             
         except Exception as e:
             print(f"Sync Logic Error: {e}")
             import traceback
             traceback.print_exc()
 
-        time.sleep(5)
+        time.sleep(3) # 加快同步频率到 3秒
 
 if __name__ == "__main__":
     print(f"Starting AI Sync (Lightweight Mode)...")

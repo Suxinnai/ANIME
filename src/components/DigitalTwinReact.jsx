@@ -68,29 +68,31 @@ export default function DigitalTwinReact() {
     // 映射应用图标
     const getAppIcon = (appName) => {
         if (!appName) return Activity;
-        const lower = appName.toLowerCase();
-        if (lower.includes('vs code') || lower.includes('code') || lower.includes('dev')) return Code;
-        if (lower.includes('music') || lower.includes('spotify') || lower.includes('cloud') || lower.includes('🎵')) return Music;
-        if (lower.includes('chrome') || lower.includes('browser') || lower.includes('edge')) return Globe;
-        if (lower.includes('wechat') || lower.includes('discord') || lower.includes('chat')) return MessageSquare;
-        return Activity;
+        const category = data.category || 'other';
+
+        // 根据后端分类选择图标
+        switch (category) {
+            case 'browser': return Globe;
+            case 'chat': return MessageSquare;
+            case 'coding': return Code;
+            case 'music': return Music;
+            default: return Activity;
+        }
     };
 
-    // 状态文案生成
-    const getStatusText = (appName) => {
-        if (!appName) return "等待指令... 💤";
-        const lower = appName.toLowerCase();
+    // 状态文案生成 (基于分类)
+    const getStatusText = () => {
+        const category = data.category || 'other';
 
-        if (isPlayingMusic) return "沉浸音乐中... 🎧";
-        if (lower.includes('chrome') || lower.includes('edge') || lower.includes('browser') || lower.includes('冲浪')) return "网络冲浪中... 🏄";
-        if (lower.includes('code') || lower.includes('dev')) return "努力搬砖中... 🧱";
-        if (lower.includes('wechat') || lower.includes('chat')) return "正在等待中... 💤";
-        if (lower.includes('game') || lower.includes('steam')) return "正在游戏中... 🎮";
-        if (lower.includes('video') || lower.includes('movie')) return "正在看番中... 📺";
-
-        return "正在摸鱼中... 🐟";
+        switch (category) {
+            case 'music': return "沉浸音乐中... 🎧";
+            case 'browser': return "网络冲浪中... 🏄";
+            case 'coding': return "努力搬砖中... 🧱";
+            case 'chat': return "正在摸鱼中... 🐟";
+            default: return "正在活动中... 💼";
+        }
     };
-    const statusText = getStatusText(currentApp);
+    const statusText = getStatusText();
 
     const AppIcon = getAppIcon(currentApp);
 
@@ -187,42 +189,45 @@ export default function DigitalTwinReact() {
                 </div>
 
                 {/* Bottom Right: Status / Media Widget (Refined) */}
+                {/* Bottom Right: Status / Media Widget (Glassmorphism Redesign) */}
                 <div className="absolute bottom-6 right-6 z-20">
                     {isPlayingMusic ? (
-                        // Music Mode: Sleek Keyboard Style
-                        <div className="flex items-center gap-3 px-3 py-2 bg-black/90 dark:bg-white/10 backdrop-blur-md rounded-full border border-white/10 shadow-xl max-w-[160px]">
-                            {/* Animated Vinyl/Icon */}
-                            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center bg-gray-800 rounded-full animate-[spin_3s_linear_infinite]">
-                                <Music className="w-3.5 h-3.5 text-anime-pink" />
+                        // Music Mode: Premium Glass Card
+                        <div className="flex items-center gap-3 px-4 py-2 bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-2xl border border-white/40 dark:border-white/10 shadow-lg max-w-[180px] hover:scale-105 transition-transform duration-300">
+                            {/* Album Art / Icon */}
+                            <div className="relative flex-shrink-0 w-8 h-8 flex items-center justify-center bg-anime-pink/20 rounded-full animate-[spin_4s_linear_infinite]">
+                                <Music className="w-4 h-4 text-anime-pink" />
                             </div>
 
                             {/* Track Info */}
-                            <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-[1px]">听歌ing...</span>
-                                <div className="relative overflow-hidden h-[12px]">
-                                    <span className="text-[9px] font-bold text-white leading-none whitespace-nowrap animate-marquee">
-                                        {displayAppName}
+                            <div className="flex flex-col overflow-hidden min-w-0">
+                                {/* Scrolling Title */}
+                                <div className="w-full overflow-hidden whitespace-nowrap mask-linear-fade">
+                                    <span className="text-[11px] font-bold text-anime-dark dark:text-white inline-block animate-[scroll_10s_linear_infinite]">
+                                        {data.pkg || displayAppName} &nbsp;&nbsp;&nbsp; {data.pkg || displayAppName}
                                     </span>
                                 </div>
+                                {/* Status / Artist */}
+                                <span className="text-[9px] font-medium text-anime-dark/60 dark:text-gray-400 truncate">
+                                    正在播放... 🎵
+                                </span>
                             </div>
 
-                            {/* Equalizer Bars */}
-                            <div className="flex gap-[2px] items-end h-3 pl-1">
-                                <div className="w-[2px] bg-anime-pink animate-[music-bar_0.5s_ease-in-out_infinite] h-[40%]"></div>
-                                <div className="w-[2px] bg-anime-pink animate-[music-bar_0.5s_ease-in-out_infinite_0.1s] h-[100%]"></div>
-                                <div className="w-[2px] bg-anime-pink animate-[music-bar_0.5s_ease-in-out_infinite_0.2s] h-[60%]"></div>
+                            {/* Spectrum Visualizer */}
+                            <div className="flex items-end gap-[1.5px] h-3 ml-1">
+                                <div className="w-[2px] bg-anime-pink/80 rounded-full animate-[bounce_1s_infinite]"></div>
+                                <div className="w-[2px] bg-anime-pink/60 rounded-full animate-[bounce_1.2s_infinite] animation-delay-75"></div>
+                                <div className="w-[2px] bg-anime-pink/40 rounded-full animate-[bounce_0.8s_infinite] animation-delay-150"></div>
                             </div>
                         </div>
                     ) : (
-                        // Standard Activity Mode
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-black/60 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/10 shadow-lg">
-                            <div className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </div>
+                        // Standard Activity Mode: Clean Bubble
+                        <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm hover:shadow-md transition-all">
+                            <div className={`w-2 h-2 rounded-full ${category === 'offline' ? 'bg-gray-400' : 'bg-green-500 animate-pulse'}`}></div>
                             <span className="text-[10px] font-bold text-anime-dark dark:text-white tracking-widest">
                                 {statusText}
                             </span>
+                            <AppIcon className="w-3 h-3 text-gray-400 ml-1" />
                         </div>
                     )}
                 </div>

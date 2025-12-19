@@ -44,12 +44,11 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* --- 按钮组件 --- */
+  /* ---Buttons --- */
   .btn-comic {
     @apply inline-flex items-center justify-center px-6 py-2 rounded-lg font-display font-bold border-2 border-anime-dark shadow-comic active:translate-y-0.5 active:shadow-none transition-all duration-100;
   }
 
-  /* Dark Button 基础调整 */
   .dark .btn-comic {
     @apply border-anime-dark-border shadow-none bg-anime-dark-surface text-anime-dark-text;
   }
@@ -63,7 +62,6 @@
     @apply btn-comic bg-anime-pink text-white hover:bg-anime-pink/90;
   }
 
-  /* Dark Primary: 保持粉色，但可能稍微暗一点或者发光，这里保持原色因为粉色在黑色上很好看 */
   .dark .btn-primary {
     @apply bg-anime-pink border-anime-pink text-white shadow-lg shadow-anime-pink/20;
   }
@@ -73,8 +71,21 @@
     @apply btn-comic bg-white text-anime-dark hover:bg-anime-yellow;
   }
 
-  /* Dark Secondary */
   .dark .btn-secondary {
     @apply bg-anime-dark-surface text-white hover:bg-gray-700 hover:text-anime-yellow;
+  }
+
+  /* --- Animations --- */
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* Linear Mask for Marquee fade effect */
+  .mask-linear-fade {
+    /* mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); */
+    /* 既然只要能看见中间就行，两端淡出 */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   }
 }
