@@ -71,62 +71,22 @@ npm run dev
 
 ## 🔌 手机状态同步 (Digital Twin Setup)
 
-要让首页右下角的“胶囊”显示你真实手机的电量、网络等状态，需要配置 **Vercel KV** 和 **手机端自动化工具**。
+要让首页右下角的“胶囊”展示你真实的赛博生命体态，本项目采用了 **双路融合方案**。
 
-### 1. 配置云端数据库 (Vercel KV)
-1.  在 Vercel 刚刚部署好的项目控制台，点击顶部菜单的 **Storage**。
-2.  点击 **Create Database** -> 选择 **KV (Redis)** -> 点击 **Create**。
-3.  **绑定项目**：确保它与刚才创建的博客项目关联。
-4.  关联后，Vercel 会自动注入 `KV_REST_API_URL` 等环境变量，**无需手动复制**。
-5.  *重要*：为了安全，建议在 **Settings -> Environment Variables** 中添加一个自定义密钥 `STATUS_SECRET`（例如：`my-super-secret-key`），防止他人恶意篡改数据。
+### 1. 硬件状态 (OwnTracks)
+利用系统级后台 App 稳定提交电池、充电及位置状态。
+1.  手机安装 **OwnTracks**。
+2.  设置 **Mode** 为 `HTTP`。
+3.  **Host** 填入：`https://你的域名/api/status/owntracks`。
 
-### 2. 配置手机端 (AutoX.js)
-安卓用户推荐使用 **AutoX.js** (即使不会写代码，复制粘贴即可)。
+### 2. 软件生活 (Lanyard + Discord)
+实时展示你正在听的歌、写的代码或玩的游戏。
+1.  开启 Discord 的 `Activity Status`。
+2.  加入 [Lanyard Discord 服务器](https://discord.gg/lanyard)（为了让后端能读取你的实时数据）。
+3.  在 `src/components/DigitalTwinReact.jsx` 中将 `DISCORD_ID` 修改为你的 Discord 用户 ID。
 
-1.  下载 **AutoX.js** 并开启无障碍权限。
-2.  新建脚本 `BlogSync.js`，复制以下代码：
-
-```javascript
-// ================= 配置区 =================
-// 填你 Vercel 部署后的完整 API 地址
-var API_URL = "https://你的域名.vercel.app/api/status/update?secret=你的密码";
-var INTERVAL = 5000;
-// =========================================
-
-console.show();
-setInterval(() => {
-    try {
-        var battery = device.getBattery();
-        var isCharging = device.isCharging();
-        var currentPkg = currentPackage();
-        var appName = getAppName(currentPkg);
-
-        var payload = {
-            "app": appName,
-            "pkg": currentPkg,
-            "battery": battery,
-            "isCharging": isCharging
-        };
-
-        var res = http.postJson(API_URL, payload);
-        if(res.statusCode == 200) log("✅ " + appName + " | " + battery + "%");
-
-    } catch (e) { error(e); }
-}, INTERVAL);
-
-function getAppName(packageName) {
-    try {
-        var pm = context.getPackageManager();
-        var appInfo = pm.getApplicationInfo(packageName, 0);
-        return pm.getApplicationLabel(appInfo).toString();
-    } catch (e) { return packageName; }
-}
-```
-
-3.  建议在 AutoX.js 设置中开启 **前台服务** 以防后台被杀。
-
-### 3. iOS 用户怎么办？
-可以使用 **快捷指令 (Shortcuts)** 的“获取电池电量”和“获取网络信息”功能，配合“获取 URL 内容” (POST 请求) 来实现自动化（需设置自动化触发器）。
+### 3. 手动控制 (Web Sync)
+如果你不方便安装 App，也可以直接在浏览器访问 `/sync` 页面，点击按钮开启手动实时同步。
 
 ---
 

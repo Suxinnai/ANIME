@@ -10,16 +10,27 @@ export default function DigitalTwinReact() {
         device: "Neural Link v2.0",
         isCharging: false
     });
+    const [discord, setDiscord] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const DISCORD_ID = "1440043638032699442"; // 请替换为你的 Discord ID
 
     // 轮询获取状态
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // 1. 获取硬件电量数据
                 const res = await fetch('/api/status/get');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);
+                }
+
+                // 2. 获取 Discord 状态数据 (Lanyard)
+                const lanyardRes = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+                if (lanyardRes.ok) {
+                    const lanyardJson = await lanyardRes.json();
+                    setDiscord(lanyardJson.data);
                 }
             } catch (e) {
                 console.error("Status fetch failed", e);
@@ -44,6 +55,23 @@ export default function DigitalTwinReact() {
     // 识别网络类型
     const isWifi = data.network?.toLowerCase().includes('wifi');
     const isMobile = !isWifi && data.network !== 'Offline' && data.network !== 'Unknown';
+
+    // 解析 Discord 活动
+    let currentApp = data.app || "System Idle";
+    if (discord?.activities?.length > 0) {
+        const primaryActivity = discord.activities[0];
+        if (primaryActivity.name === "Spotify") {
+            currentApp = "🎵 " + (primaryActivity.details || primaryActivity.name);
+        } else if (primaryActivity.name === "Visual Studio Code") {
+            currentApp = "💻 Coding: " + (primaryActivity.details || "Developing");
+        } else {
+            currentApp = "🎮 " + primaryActivity.name;
+        }
+    }
+
+    // 状态点颜色
+    const statusColor = discord?.discord_status === 'online' ? 'bg-green-400' :
+        discord?.discord_status === 'dnd' ? 'bg-red-400' : 'bg-yellow-400';
 
     return (
         <div className="relative group perspective-1000">
@@ -87,17 +115,21 @@ export default function DigitalTwinReact() {
 
                 {/* Top Center: Active App Display (Dynamic Island Style) */}
                 <div className="absolute top-14 left-0 right-0 flex justify-center z-40">
-                    <div className="max-w-[80%] flex items-center gap-2.5 px-4 py-1.5 bg-anime-dark dark:bg-white text-white dark:text-anime-dark rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1">
-                        <div className="flex-shrink-0 w-4 h-4 rounded-md bg-white/20 dark:bg-anime-dark/10 flex items-center justify-center">
-                            <Activity className="w-2.5 h-2.5" />
+                    <div className="max-w-[90%] flex items-center gap-2.5 px-4 py-1.5 bg-anime-dark dark:bg-white text-white dark:text-anime-dark rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1">
+                        <div className="flex-shrink-0 w-4 h-4 rounded-md bg-white/20 dark:bg-anime-dark/10 flex items-center justify-center overflow-hidden">
+                            {discord?.discord_user?.avatar ? (
+                                <img src={`https://cdn.discordapp.com/avatars/${discord.discord_user.id}/${discord.discord_user.avatar}.png`} className="w-full h-full object-cover" />
+                            ) : (
+                                <Activity className="w-2.5 h-2.5" />
+                            )}
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Currently Using</span>
-                            <span className="text-[10px] font-black tracking-wide leading-none truncate max-w-[120px]">
-                                {data.app || "System Idle"}
+                            <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Currently Active</span>
+                            <span className="text-[10px] font-black tracking-wide leading-none truncate max-w-[150px]" title={currentApp}>
+                                {currentApp}
                             </span>
                         </div>
-                        <div className={`w-1.5 h-1.5 rounded-full ${data.network === 'Offline' ? 'bg-red-500' : 'bg-green-400 animate-pulse'} ml-1`}></div>
+                        <div className={`w-1.5 h-1.5 rounded-full ${statusColor} animate-pulse ml-1`}></div>
                     </div>
                 </div>
 
