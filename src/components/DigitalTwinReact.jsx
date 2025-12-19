@@ -190,6 +190,7 @@ export default function DigitalTwinReact() {
 
                 {/* Bottom Right: Status / Media Widget (Refined) */}
                 {/* Bottom Right: Status / Media Widget (Glassmorphism Redesign) */}
+                {/* Bottom Right: Status / Media Widget (Glassmorphism Redesign) */}
                 <div className="absolute bottom-6 right-6 z-20">
                     {isPlayingMusic ? (
                         // Music Mode: Premium Glass Card
@@ -209,7 +210,7 @@ export default function DigitalTwinReact() {
                                 </div>
                                 {/* Status / Artist (Showing AI Mood as Pseudo-Lyrics) */}
                                 <span className="text-[9px] font-medium text-anime-dark/60 dark:text-gray-400 truncate">
-                                    {data.mood || "沉浸音乐中... �"}
+                                    {data.mood || "沉浸音乐中... 🎧"}
                                 </span>
                             </div>
 
@@ -223,7 +224,7 @@ export default function DigitalTwinReact() {
                     ) : (
                         // Standard Activity Mode: Clean Bubble
                         <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm hover:shadow-md transition-all">
-                            <div className={`w-2 h-2 rounded-full ${category === 'offline' ? 'bg-gray-400' : 'bg-green-500 animate-pulse'}`}></div>
+                            <div className={`w-2 h-2 rounded-full ${(data.category || 'other') === 'offline' ? 'bg-gray-400' : 'bg-green-500 animate-pulse'}`}></div>
                             <span className="text-[10px] font-bold text-anime-dark dark:text-white tracking-widest">
                                 {statusText}
                             </span>
