@@ -4,11 +4,8 @@ import { kv } from '@vercel/kv';
 
 export const GET: APIRoute = async () => {
     try {
-        // 从 Redis 读取两份数据
-        const [manualStatus, owntracksStatus] = await Promise.all([
-            kv.get('my_device_status'),
-            kv.get('my_device_status_owntracks')
-        ]);
+        // 从 Redis 读取数据 (仅读取手动/脚本上传的数据)
+        const status = await kv.get('my_device_status');
 
         // 默认数据
         const fallbackData = {
@@ -19,12 +16,8 @@ export const GET: APIRoute = async () => {
             isCharging: false
         };
 
-        // 合并数据：如果有手动同步则优先，否则用 OwnTracks 的电量
-        const data = {
-            ...fallbackData,
-            ...(owntracksStatus as object || {}),
-            ...(manualStatus as object || {})
-        };
+        // 使用 Redis 数据或默认数据
+        const data = status || fallbackData;
 
         return new Response(JSON.stringify(data), {
             status: 200,

@@ -8,7 +8,7 @@ export const POST: APIRoute = async ({ request }) => {
     const secret = url.searchParams.get('secret');
 
     // 建议在环境变量中设置 SECRET，这里演示用简单的硬编码或环境变量
-    const MY_SECRET = import.meta.env.STATUS_SECRET || "suxinnai_secret_123";
+    const MY_SECRET = import.meta.env.STATUS_SECRET || "sxn_8f3c1a9d2e6b4c7f90a1d3e5b7c9f1a2";
 
     if (secret !== MY_SECRET) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });

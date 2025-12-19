@@ -69,26 +69,18 @@ npm run dev
     *   **Framework Preset**: 选择 `Astro` (通常会自动识别)。
     *   **Environment Variables**: 暂时留空，点击 **Deploy**。
 
-## 🔌 手机状态同步 (Digital Twin Setup)
-
-要让首页右下角的“胶囊”展示你真实的赛博生命体态，本项目采用了 **双路融合方案**。
-
-### 1. 硬件状态 (OwnTracks)
-利用系统级后台 App 稳定提交电池、充电及位置状态。
-1.  手机安装 **OwnTracks**。
-2.  设置 **Mode** 为 `HTTP`。
-3.  **Host** 填入：`https://你的域名/api/status/owntracks`。
-
-### 2. 软件生活 (Lanyard + Discord)
-实时展示你正在听的歌、写的代码或玩的游戏。
-1.  开启 Discord 的 `Activity Status`。
-2.  加入 [Lanyard Discord 服务器](https://discord.gg/lanyard)（为了让后端能读取你的实时数据）。
-3.  在 `src/components/DigitalTwinReact.jsx` 中将 `DISCORD_ID` 修改为你的 Discord 用户 ID。
-
-### 3. 手动控制 (Web Sync)
-如果你不方便安装 App，也可以直接在浏览器访问 `/sync` 页面，点击按钮开启手动实时同步。
-
----
+## 🔌 电脑状态同步 (PC Status Sync)
+ 
+ 1. 确保安装 Python 3。
+ 2. 运行 `pip install requests`。
+ 3. 修改 `scripts/pc_sync.py` 中的 `API_URL` 为你的域名。
+ 4. 运行 `python scripts/pc_sync.py` 开始同步。
+ 
+ 目前支持同步：
+ *   **当前激活窗口** (如 VS Code, Chrome)
+ *   **自定义心情** (Mood)
+ 
+ ---
 
 
 ## 🤝 贡献 (Contributing)

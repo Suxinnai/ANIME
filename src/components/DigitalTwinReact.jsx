@@ -4,33 +4,23 @@ import { Zap, Wifi, MapPin, Smartphone, Activity } from 'lucide-react';
 
 export default function DigitalTwinReact() {
     const [data, setData] = useState({
-        battery: 85,
-        network: "WiFi • 5G",
-        location: "Neo-Tokyo, Sector 7",
-        device: "Neural Link v2.0",
-        isCharging: false
+        network: "Ethernet",
+        location: "Chongqing", // 重庆
+        device: "Workstation",
+        app: "VS Code",
+        mood: "Focusing", // 默认状态
+        isCharging: true
     });
-    const [discord, setDiscord] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    const DISCORD_ID = "1440043638032699442"; // 请替换为你的 Discord ID
-
     // 轮询获取状态
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 1. 获取硬件电量数据
+                // 获取硬件电量数据
                 const res = await fetch('/api/status/get');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);
-                }
-
-                // 2. 获取 Discord 状态数据 (Lanyard)
-                const lanyardRes = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
-                if (lanyardRes.ok) {
-                    const lanyardJson = await lanyardRes.json();
-                    setDiscord(lanyardJson.data);
                 }
             } catch (e) {
                 console.error("Status fetch failed", e);
@@ -45,33 +35,12 @@ export default function DigitalTwinReact() {
         return () => clearInterval(interval);
     }, []);
 
-    // 动态颜色计算
-    const getBatteryColor = (level) => {
-        if (level <= 20) return "text-red-500";
-        if (level <= 50) return "text-yellow-500";
-        return "text-green-500";
-    };
-
     // 识别网络类型
     const isWifi = data.network?.toLowerCase().includes('wifi');
     const isMobile = !isWifi && data.network !== 'Offline' && data.network !== 'Unknown';
 
-    // 解析 Discord 活动
-    let currentApp = data.app || "System Idle";
-    if (discord?.activities?.length > 0) {
-        const primaryActivity = discord.activities[0];
-        if (primaryActivity.name === "Spotify") {
-            currentApp = "🎵 " + (primaryActivity.details || primaryActivity.name);
-        } else if (primaryActivity.name === "Visual Studio Code") {
-            currentApp = "💻 Coding: " + (primaryActivity.details || "Developing");
-        } else {
-            currentApp = "🎮 " + primaryActivity.name;
-        }
-    }
-
-    // 状态点颜色
-    const statusColor = discord?.discord_status === 'online' ? 'bg-green-400' :
-        discord?.discord_status === 'dnd' ? 'bg-red-400' : 'bg-yellow-400';
+    // 当前应用
+    const currentApp = data.app || "System Idle";
 
     return (
         <div className="relative group perspective-1000">
@@ -85,29 +54,23 @@ export default function DigitalTwinReact() {
                         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm">
                             <Smartphone className="w-3 h-3 text-anime-blue" />
                             <span className="text-[9px] font-bold text-anime-dark/70 dark:text-gray-300 uppercase tracking-tighter">
-                                {data.device || "Unknown Device"}
+                                {data.device || "Workstation"}
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm">
                             <MapPin className="w-3 h-3 text-anime-pink" />
                             <span className="text-[9px] font-bold text-anime-dark/70 dark:text-gray-300 uppercase tracking-tighter">
-                                {data.location || "Neo-Tokyo"}
+                                Chongqing
                             </span>
                         </div>
                     </div>
 
-                    {/* Right: Network & Pulse */}
+                    {/* Right: Network */}
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm">
-                            {isWifi ? (
-                                <Wifi className="w-3 h-3 text-green-500" />
-                            ) : isMobile ? (
-                                <Activity className="w-3 h-3 text-blue-500" />
-                            ) : (
-                                <Activity className="w-3 h-3 text-gray-400 opacity-50" />
-                            )}
+                            <Activity className="w-3 h-3 text-green-500" />
                             <span className="text-[9px] font-bold text-anime-dark/80 dark:text-gray-200">
-                                {data.network || "Offline"}
+                                {data.network || "Ethernet"}
                             </span>
                         </div>
                     </div>
@@ -117,19 +80,15 @@ export default function DigitalTwinReact() {
                 <div className="absolute top-14 left-0 right-0 flex justify-center z-40">
                     <div className="max-w-[90%] flex items-center gap-2.5 px-4 py-1.5 bg-anime-dark dark:bg-white text-white dark:text-anime-dark rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1">
                         <div className="flex-shrink-0 w-4 h-4 rounded-md bg-white/20 dark:bg-anime-dark/10 flex items-center justify-center overflow-hidden">
-                            {discord?.discord_user?.avatar ? (
-                                <img src={`https://cdn.discordapp.com/avatars/${discord.discord_user.id}/${discord.discord_user.avatar}.png`} className="w-full h-full object-cover" />
-                            ) : (
-                                <Activity className="w-2.5 h-2.5" />
-                            )}
+                            <Activity className="w-2.5 h-2.5" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Currently Active</span>
+                            <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Active Task</span>
                             <span className="text-[10px] font-black tracking-wide leading-none truncate max-w-[150px]" title={currentApp}>
                                 {currentApp}
                             </span>
                         </div>
-                        <div className={`w-1.5 h-1.5 rounded-full ${statusColor} animate-pulse ml-1`}></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse ml-1"></div>
                     </div>
                 </div>
 
@@ -147,17 +106,17 @@ export default function DigitalTwinReact() {
                     </div>
                 </div>
 
-                {/* Bottom Left: Quick Stats (Simplified) */}
+                {/* Bottom Left: Mood Status (Replaced Battery) */}
                 <div className="absolute bottom-6 left-6 z-20">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <div className="p-2 bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-xl border border-anime-dark/5 dark:border-white/5 shadow-sm">
-                                <Zap className={`w-4 h-4 ${getBatteryColor(data.battery)} ${data.isCharging ? 'animate-bounce' : ''}`} />
+                                <Zap className="w-4 h-4 text-anime-yellow animate-pulse" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] text-gray-400 font-bold uppercase leading-none">Energy</span>
+                                <span className="text-[10px] text-gray-400 font-bold uppercase leading-none">Current Mood</span>
                                 <span className="text-sm font-black text-anime-dark dark:text-white leading-tight">
-                                    {data.battery}%
+                                    {data.mood || "Focusing"}
                                 </span>
                             </div>
                         </div>
@@ -168,14 +127,9 @@ export default function DigitalTwinReact() {
                 <div className="absolute bottom-6 right-6 z-20">
                     <div className="bg-white/80 dark:bg-black/60 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl p-4 shadow-xl w-40 transform transition-all duration-300 hover:scale-105 hover:translate-x-[-4px] hover:translate-y-[-4px]">
                         <div className="space-y-3">
-                            <div>
-                                <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">Status Report</div>
-                                <div className="h-1.5 w-full bg-gray-100 dark:bg-white/10 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-anime-blue transition-all duration-1000"
-                                        style={{ width: `${data.battery}%` }}
-                                    ></div>
-                                </div>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-[8px] text-gray-400 font-bold uppercase">System Status</span>
+                                <span className="text-[10px] font-bold text-green-500">ONLINE</span>
                             </div>
 
                             {data.pkg && (
