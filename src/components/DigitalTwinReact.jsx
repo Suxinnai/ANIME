@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Zap, Wifi, MapPin, Smartphone, Activity } from 'lucide-react';
+import { Zap, Wifi, MapPin, Smartphone, Activity, Globe, Music, Code, Coffee, MessageSquare } from 'lucide-react';
 
 export default function DigitalTwinReact() {
     const [data, setData] = useState({
@@ -42,6 +42,19 @@ export default function DigitalTwinReact() {
     // 当前应用
     const currentApp = data.app || "System Idle";
 
+    // 映射应用图标
+    const getAppIcon = (appName) => {
+        if (!appName) return Activity;
+        const lower = appName.toLowerCase();
+        if (lower.includes('vs code') || lower.includes('code') || lower.includes('dev')) return Code;
+        if (lower.includes('music') || lower.includes('spotify') || lower.includes('cloud')) return Music;
+        if (lower.includes('chrome') || lower.includes('browser') || lower.includes('edge')) return Globe;
+        if (lower.includes('wechat') || lower.includes('discord') || lower.includes('chat')) return MessageSquare;
+        return Activity;
+    };
+
+    const AppIcon = getAppIcon(currentApp);
+
     return (
         <div className="relative group perspective-1000">
             {/* Holographic Card Container */}
@@ -80,7 +93,7 @@ export default function DigitalTwinReact() {
                 <div className="absolute top-14 left-0 right-0 flex justify-center z-40">
                     <div className="max-w-[90%] flex items-center gap-2.5 px-4 py-1.5 bg-anime-dark dark:bg-white text-white dark:text-anime-dark rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1">
                         <div className="flex-shrink-0 w-4 h-4 rounded-md bg-white/20 dark:bg-anime-dark/10 flex items-center justify-center overflow-hidden">
-                            <Activity className="w-2.5 h-2.5" />
+                            <AppIcon className="w-2.5 h-2.5" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-[8px] font-bold opacity-70 uppercase tracking-widest leading-none mb-0.5">Active Task</span>
@@ -96,13 +109,20 @@ export default function DigitalTwinReact() {
                 <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white dark:from-[#1a1a1a] dark:to-black">
                     <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[85%] h-[75%] transition-transform duration-700 hover:scale-105">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[85%] h-[75%] transition-transform duration-700 hover:scale-105 group">
                         <img
                             src="/mascot.png"
                             alt="Digital Twin"
                             className="w-full h-full object-contain drop-shadow-2xl"
                             style={{ filter: 'drop-shadow(0 0 30px rgba(59, 130, 246, 0.15))' }}
                         />
+
+                        {/* AI Speech Bubble */}
+                        {data.mood && (
+                            <div className="absolute -top-12 -right-8 max-w-[140px] bg-white dark:bg-anime-dark border-2 border-anime-pink text-anime-dark dark:text-white text-[10px] font-bold px-3 py-2 rounded-2xl rounded-bl-none shadow-[4px_4px_0px_#ff75c3] animate-bounce z-50">
+                                {data.mood}
+                            </div>
+                        )}
                     </div>
                 </div>
 
