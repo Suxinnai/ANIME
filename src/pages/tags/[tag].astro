@@ -2,7 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogCard from "../../components/BlogCard.astro";
 import { getCollection } from "astro:content";
-import { Tag, ArrowLeft } from "lucide-react";
+import { Tag as TagIcon, ArrowLeft } from "lucide-react";
+
+export const prerender = true;
 
 export async function getStaticPaths() {
     const allPosts = await getCollection("blog");
@@ -39,7 +41,7 @@ const { posts } = Astro.props;
                 <div
                     class="w-16 h-16 bg-anime-yellow border-2 border-anime-dark rounded-full flex items-center justify-center shadow-comic animate-bounce-slow"
                 >
-                    <Tag className="w-8 h-8 text-anime-dark" />
+                    <TagIcon className="w-8 h-8 text-anime-dark" />
                 </div>
                 <div>
                     <h1 class="text-4xl font-display font-bold text-anime-dark">

@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Calendar, ArrowLeft, Clock, List } from "lucide-react";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
     return posts.map((post) => ({
@@ -12,6 +14,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+if (!post) {
+    return Astro.redirect("/404");
+}
+
 const { Content, headings } = await post.render();
 
 const formattedDate = post.data.pubDate.toLocaleDateString("zh-CN", {
