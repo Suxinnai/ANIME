@@ -46,7 +46,7 @@ const status = {
 
 #### 核心架构图
 
-1.  **数据源 (手机)**：通过 MacroDroid/Tasker 监测状态 → 发送 `POST` 请求。
+1.  **数据源 (手机)**：通过 **AutoX.js** (JS脚本) 监测状态 → 发送 `POST` 请求。
 2.  **中转站 (Vercel API)**：接收请求 → 写入 **Vercel KV** (一个超快的 Redis 数据库)。
 3.  **展示端 (博客)**：前端 React 组件每隔几秒自动 `GET` 请求 → 读取 Vercel KV → 更新 UI。
 
@@ -57,6 +57,7 @@ Vercel 官方提供了一个免费的 Redis 数据库，叫 Vercel KV，专门�
 
 1.  在 Vercel 控制台你的项目里，点击 **Storage** → **Create Database** → 选择 **KV (Redis)**。
 2.  创建后，它会自动把 `KV_REST_API_URL` 和 `KV_REST_API_TOKEN` 两个环境变量注入到你的项目中。
+3.  **安全建议**：去 `Settings -> Environment Variables` 加一个 `STATUS_SECRET` (随便填个密码)，防止接口被滥用。
 
 **第二步：编写后端 API**
 在 Astro 项目中，你可以直接写服务端接口。
@@ -65,6 +66,14 @@ Vercel 官方提供了一个免费的 Redis 数据库，叫 Vercel KV，专门�
 ```typescript
 // 伪代码：src/pages/api/status/update.ts
 export const POST = async ({ request }) => {
+  const url = new URL(request.url);
+  const secret = url.searchParams.get('secret');
+  
+  // 简单的密码验证
+  if (secret !== process.env.STATUS_SECRET) {
+      return new Response("Unauthorized", { status: 401 });
+  }
+
   const body = await request.json();
   // 把数据存入 Redis，设置 10 分钟过期
   await kv.set('my_device_status', body, { ex: 600 });
@@ -88,24 +97,76 @@ useEffect(() => {
 }, []);
 ```
 
-**第四步：手机端配置 (MacroDroid)**
-现在你的服务端已经就绪了。
-URL 地址是：`https://你的域名.vercel.app/api/status/update`
+**第四步：手机端配置 (Code Streaming: AutoX.js)**
+我们抛弃繁琐的图形化配置，直接上代码。这种方案更灵活，也更适合开发者。
 
-在 MacroDroid 里：
-1.  **触发器**：应用启动、应用关闭、电量改变 (任意一个都可以触发)。
-2.  **动作**：HTTP Request (POST)。
-3.  **URL**：填上面的地址。
-4.  **Body (Content Type: JSON)**：
-    ```json
-    {
-      "network": "{wifi_ssid}",
-      "battery": "{battery}",
-      "isCharging": {power_connected},
-      "device": "Xiaomi 13",
-      "location": "Sector 7"
+1.  **下载安装**：去 GitHub 下载 **AutoX.js** (原 Auto.js 的开源版)。安装后务必开启**无障碍服务**权限。
+2.  **新建脚本**：在 APP 里新建一个脚本 `BlogSync.js`，粘贴以下代码：
+
+```javascript
+// ================= 配置区 =================
+// 填你 Vercel 部署后的完整 API 地址
+var API_URL = "https://你的域名.vercel.app/api/status/update?secret=你的密码";
+// 多久同步一次 (毫秒)，建议 5000 (5秒)
+// 注意：太快可能会消耗较多电量
+var INTERVAL = 5000;
+// =========================================
+
+console.show(); // 开启控制台，方便看日志
+log("开始监听手机状态...");
+
+// 保持脚本后台运行
+setInterval(() => {
+    try {
+        // 1. 获取基础信息
+        var battery = device.getBattery(); // 获取电量 (0-100)
+        var isCharging = device.isCharging(); // 是否在充电
+        
+        // 2. 获取当前前台应用包名 (需要无障碍权限)
+        var currentPkg = currentPackage(); 
+        
+        // 3. 获取应用名称
+        var appName = getAppName(currentPkg); 
+
+        // 4. 准备数据
+        var payload = {
+            "app": appName,
+            "pkg": currentPkg,
+            "battery": battery,
+            "isCharging": isCharging
+        };
+
+        // 5. 发送 POST 请求
+        var res = http.postJson(API_URL, payload);
+        
+        // 打印结果
+        if(res.statusCode == 200){
+            log("上传成功: " + appName + " | 🔋" + battery + "%");
+        } else {
+            error("上传失败: " + res.statusCode);
+        }
+
+    } catch (e) {
+        error("发生错误: " + e);
     }
-    ```
+}, INTERVAL);
+
+// 辅助函数：获取应用名称
+function getAppName(packageName) {
+    try {
+        var pm = context.getPackageManager();
+        var appInfo = pm.getApplicationInfo(packageName, 0);
+        return pm.getApplicationLabel(appInfo).toString();
+    } catch (e) {
+        return packageName; // 如果报错，返回包名本身
+    }
+}
+```
+
+3.  **后台保活 (关键)**：
+    *   在 AutoX.js 设置里开启 “前台服务”。
+    *   在手机系统的电池优化里，允许 AutoX.js 后台高耗电。
+    *   在多任务界面给 AutoX.js 加锁。
 
 ### 这种方案算“实时”吗？
 

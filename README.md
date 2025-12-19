@@ -17,7 +17,7 @@
     *   **任务系统 (Quest)**：以“当前任务”展示正在进行的项目进度。
     *   **装备栏 (Inventory)**：酷炫的网格展示常用设备（包含那只卡皮巴拉！）。
 *   **🔌 数字孪生 (Digital Twin)**：
-    *   **实时同步**：集成 Vercel KV + MacroDroid，将现实世界手机的电量、网络、位置实时映射到网页上。
+    *   **实时同步**：集成 Vercel KV + **AutoX.js**，将现实世界手机的电量、应用状态实时映射到网页上。
     *   **动态交互**：React 组件驱动，支持实时轮询更新。
 *   **🎨 极致 UI/UX**：
     *   **暗黑模式 (Dark Mode)**：全站完美适配深色主题，深夜阅读护眼又酷炫。
@@ -80,29 +80,50 @@ npm run dev
 4.  关联后，Vercel 会自动注入 `KV_REST_API_URL` 等环境变量，**无需手动复制**。
 5.  *重要*：为了安全，建议在 **Settings -> Environment Variables** 中添加一个自定义密钥 `STATUS_SECRET`（例如：`my-super-secret-key`），防止他人恶意篡改数据。
 
-### 2. 配置手机端 (MacroDroid)
-安卓用户推荐使用 **MacroDroid** (或 Tasker) 来定时上报状态。
+### 2. 配置手机端 (AutoX.js)
+安卓用户推荐使用 **AutoX.js** (即使不会写代码，复制粘贴即可)。
 
-*   **触发器(Triggers)**:
-    *   电量改变 (Battery Level Changed)
-    *   网络状态改变 (Connectivity Changed)
-    *   或者定时任务 (每 10 分钟)
-*   **动作(Actions)**:
-    *   **HTTP 请求 (HTTP Request)**:
-        *   **URL**: `https://<你的域名>/api/status/update?secret=<你的STATUS_SECRET>`
-        *   **Method**: `POST`
-        *   **Content Type**: `application/json`
-        *   **Body**:
-            ```json
-            {
-              "network": "{wifi_ssid}",
-              "battery": "{battery}",
-              "isCharging": {power_connected},
-              "device": "Xiaomi 13",
-              "location": "Sector 7"
-            }
-            ```
-            *(注：`{}` 内的是 MacroDroid 的动态变量)*
+1.  下载 **AutoX.js** 并开启无障碍权限。
+2.  新建脚本 `BlogSync.js`，复制以下代码：
+
+```javascript
+// ================= 配置区 =================
+// 填你 Vercel 部署后的完整 API 地址
+var API_URL = "https://你的域名.vercel.app/api/status/update?secret=你的密码";
+var INTERVAL = 5000;
+// =========================================
+
+console.show();
+setInterval(() => {
+    try {
+        var battery = device.getBattery();
+        var isCharging = device.isCharging();
+        var currentPkg = currentPackage();
+        var appName = getAppName(currentPkg);
+
+        var payload = {
+            "app": appName,
+            "pkg": currentPkg,
+            "battery": battery,
+            "isCharging": isCharging
+        };
+
+        var res = http.postJson(API_URL, payload);
+        if(res.statusCode == 200) log("✅ " + appName + " | " + battery + "%");
+
+    } catch (e) { error(e); }
+}, INTERVAL);
+
+function getAppName(packageName) {
+    try {
+        var pm = context.getPackageManager();
+        var appInfo = pm.getApplicationInfo(packageName, 0);
+        return pm.getApplicationLabel(appInfo).toString();
+    } catch (e) { return packageName; }
+}
+```
+
+3.  建议在 AutoX.js 设置中开启 **前台服务** 以防后台被杀。
 
 ### 3. iOS 用户怎么办？
 可以使用 **快捷指令 (Shortcuts)** 的“获取电池电量”和“获取网络信息”功能，配合“获取 URL 内容” (POST 请求) 来实现自动化（需设置自动化触发器）。

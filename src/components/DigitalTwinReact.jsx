@@ -76,10 +76,18 @@ export default function DigitalTwinReact() {
                 <div className="absolute bottom-6 right-6 z-20">
                     <div className="bg-white/80 dark:bg-black/60 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl p-4 shadow-lg w-48 transition-all duration-300 hover:scale-105">
 
-                        {/* Header */}
+                        {/* Current App Header */}
                         <div className="flex items-center justify-between mb-3 pb-2 border-b border-black/5 dark:border-white/10">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">VS Code</span>
-                            <div className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)] animate-pulse"></div>
+                            <div className="flex items-center gap-2 overflow-hidden">
+                                {/* App Icon Placeholder - In a real app you'd map pkg to actual icons */}
+                                <div className="w-4 h-4 rounded bg-gray-200 dark:bg-white/20 flex items-center justify-center text-[8px] font-bold text-gray-500">
+                                    {data.app ? data.app[0] : 'A'}
+                                </div>
+                                <span className="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest truncate max-w-[80px]" title={data.app || "Idle"}>
+                                    {data.app || "System Idle"}
+                                </span>
+                            </div>
+                            <div className={`w-1.5 h-1.5 rounded-full ${data.isCharging ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'} shadow-[0_0_8px_rgba(74,222,128,0.6)]`}></div>
                         </div>
 
                         {/* Stats Grid */}
@@ -90,11 +98,11 @@ export default function DigitalTwinReact() {
                                     <Zap className={`w-3 h-3 ${getBatteryColor(data.battery)}`} />
                                 </div>
                                 <div>
-                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Energy</div>
+                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Energy {data.isCharging && '⚡'}</div>
                                     <div className="text-xs font-bold text-anime-dark dark:text-white flex items-center gap-1">
                                         {data.battery}%
-                                        {/* Charging Indicator */}
-                                        <div className={`w-10 h-1.5 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden ml-1`}>
+                                        {/* Charging Progress Bar */}
+                                        <div className={`w-12 h-1.5 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden ml-1`}>
                                             <div
                                                 className={`h-full ${data.battery <= 20 ? 'bg-red-500' : 'bg-green-500'} transition-all duration-1000`}
                                                 style={{ width: `${data.battery}%` }}
@@ -104,38 +112,35 @@ export default function DigitalTwinReact() {
                                 </div>
                             </div>
 
-                            {/* Network */}
-                            <div className="flex items-start gap-3">
-                                <div className="p-1.5 bg-gray-100 dark:bg-white/5 rounded-lg">
-                                    <Wifi className="w-3 h-3 text-blue-500" />
+                            {/* App Package Name (Technical Details) */}
+                            {data.pkg && (
+                                <div className="flex items-start gap-3">
+                                    <div className="p-1.5 bg-gray-100 dark:bg-white/5 rounded-lg">
+                                        <Activity className="w-3 h-3 text-blue-500" />
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] text-gray-400 font-bold uppercase">Process</div>
+                                        <div className="text-[10px] font-bold text-anime-dark dark:text-white truncate w-24" title={data.pkg}>
+                                            {data.pkg}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Network</div>
-                                    <div className="text-xs font-bold text-anime-dark dark:text-white">{data.network}</div>
-                                </div>
-                            </div>
+                            )}
 
-                            {/* Location */}
-                            <div className="flex items-start gap-3">
-                                <div className="p-1.5 bg-gray-100 dark:bg-white/5 rounded-lg">
-                                    <MapPin className="w-3 h-3 text-purple-500" />
+                            {/* Fallback / Extra Info */}
+                            {(data.network || data.location) && (
+                                <div className="flex items-start gap-3 opacity-60">
+                                    <div className="p-1.5 bg-gray-100 dark:bg-white/5 rounded-lg">
+                                        <Wifi className="w-3 h-3 text-gray-400" />
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] text-gray-400 font-bold uppercase">Status</div>
+                                        <div className="text-[10px] font-bold text-anime-dark dark:text-white">
+                                            {data.network || "Online"}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Location</div>
-                                    <div className="text-xs font-bold text-anime-dark dark:text-white truncate w-24" title={data.location}>{data.location}</div>
-                                </div>
-                            </div>
-
-                            {/* Device Info */}
-                            <div className="flex items-start gap-3 pt-1">
-                                <div className="p-1.5 bg-gray-100 dark:bg-white/5 rounded-lg">
-                                    <Smartphone className="w-3 h-3 text-gray-500" />
-                                </div>
-                                <div>
-                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Device</div>
-                                    <div className="text-[10px] font-bold text-anime-dark/70 dark:text-white/70">{data.device}</div>
-                                </div>
-                            </div>
+                            )}
 
                         </div>
                     </div>
