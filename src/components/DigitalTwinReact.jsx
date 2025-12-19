@@ -207,9 +207,9 @@ export default function DigitalTwinReact() {
                                         {data.pkg || displayAppName} &nbsp;&nbsp;&nbsp; {data.pkg || displayAppName}
                                     </span>
                                 </div>
-                                {/* Status / Artist */}
+                                {/* Status / Artist (Showing AI Mood as Pseudo-Lyrics) */}
                                 <span className="text-[9px] font-medium text-anime-dark/60 dark:text-gray-400 truncate">
-                                    正在播放... 🎵
+                                    {data.mood || "沉浸音乐中... �"}
                                 </span>
                             </div>
 
