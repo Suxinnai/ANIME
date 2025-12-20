@@ -120,6 +120,18 @@ button:active {
   background: transparent !important;
 }
 
+/* 更激进的修复：把所有可能产生椭圆的元素背景都去掉 */
+.gsc-comment-author,
+.gsc-comment-author-avatar+*,
+.gsc-comment-header>*,
+.gsc-comment-header a,
+.gsc-comment-author>* {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 8px !important;
+  /* 如果还有背景，至少改成方角 */
+}
+
 .dark .gsc-comment {
   background-color: rgba(30, 30, 35, 0.6) !important;
 }
