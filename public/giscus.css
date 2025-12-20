@@ -38,15 +38,18 @@ main {
 
   /* 核心变量重写 */
   --color-btn-text: #ffffff;
-  --color-btn-bg: #ff8fab; /* 按钮背景 - 动漫粉 */
+  --color-btn-bg: #ff8fab;
+  /* 按钮背景 - 动漫粉 */
   --color-btn-border: rgba(255, 255, 255, 0.1);
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #ff769b; /* 按钮悬停 - 深粉 */
+  --color-btn-hover-bg: #ff769b;
+  /* 按钮悬停 - 深粉 */
   --color-btn-hover-border: rgba(255, 255, 255, 0.1);
   --color-btn-selected-bg: #ff769b;
   --color-btn-primary-text: #ffffff;
-  --color-btn-primary-bg: #ff8fab; /* 主要按钮背景 */
+  --color-btn-primary-bg: #ff8fab;
+  /* 主要按钮背景 */
   --color-btn-primary-border: rgba(255, 255, 255, 0.1);
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
@@ -57,15 +60,18 @@ main {
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.5);
   --color-btn-primary-disabled-bg: #ffb3c6;
   --color-btn-primary-disabled-border: rgba(255, 255, 255, 0.1);
-  
+
   /* 输入框与背景 */
-  --color-canvas-default: transparent; /* 背景透明 */
+  --color-canvas-default: transparent;
+  /* 背景透明 */
   --color-canvas-overlay: #ffffff;
   --color-canvas-inset: transparent;
-  --color-border-default: transparent; /* 去掉边框 */
+  --color-border-default: transparent;
+  /* 去掉边框 */
   --color-border-muted: rgba(127, 127, 127, 0.2);
   --color-neutral-muted: rgba(127, 127, 127, 0.1);
-  --color-accent-fg: #ff8fab; /* 链接颜色 */
+  --color-accent-fg: #ff8fab;
+  /* 链接颜色 */
   --color-accent-emphasis: #ff8fab;
   --color-accent-muted: rgba(255, 143, 171, 0.4);
   --color-accent-subtle: rgba(255, 143, 171, 0.1);
@@ -89,22 +95,111 @@ main {
     --color-fg-muted: #8b949e;
     --color-input-bg: rgba(0, 0, 0, 0.2);
     --color-input-contrast-bg: rgba(0, 0, 0, 0.4);
+    --color-btn-bg: #ff769b;
+    --color-accent-fg: #ffb3c6;
   }
 }
 
-/* 额外的 CSS 注入 - 让输入框变得圆润 */
-.gsc-comment-box {
-  background-color: transparent;
-  border: 1px dashed var(--color-border-muted);
-  border-radius: 1rem;
+/* === 1. 把所有“评论”字样替换为“留言” === */
+/* 这里的逻辑是通过 CSS 隐藏原文字并用 content 替换，仅在支持的浏览器生效 */
+.gsc-header .gsc-comments-count {
+  visibility: hidden;
+  position: relative;
+  font-size: 0;
 }
 
-.gsc-comment-box-textarea {
-  background-color: var(--color-input-bg);
-  border-radius: 0.5rem;
+.gsc-header .gsc-comments-count::after {
+  content: "条留言";
+  visibility: visible;
+  position: absolute;
+  left: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
-button.gsc-social-reaction-summary-item {
-  border-radius: 99px;
-  border: 1px solid var(--color-border-muted);
+/* 修改输入框 Placeholder - 这是一个黑魔法途径 */
+.gsc-comment-box-textarea::placeholder {
+  color: transparent !important;
+}
+
+.gsc-comment-box-main::before {
+  content: "在此刻下你的期许，愿时光温柔以待...";
+  position: absolute;
+  top: 2.5rem;
+  left: 1.5rem;
+  color: var(--color-fg-subtle);
+  pointer-events: none;
+  font-style: italic;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* 当输入框有内容或聚焦时隐藏自定义 placeholder */
+.gsc-comment-box-main:focus-within::before,
+.gsc-comment-box-textarea:not(:placeholder-shown)+.gsc-comment-box-main::before {
+  display: none;
+}
+
+/* === 2. 便签纸风格的留言卡片 === */
+.gsc-comment {
+  background-color: #fffdf2 !important;
+  /* 浅黄色便签感 */
+  border: none !important;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.05) !important;
+  padding: 1.5rem !important;
+  margin-bottom: 2rem !important;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.dark .gsc-comment {
+  background-color: #2d2a1b !important;
+  color: #f0f6fc !important;
+}
+
+/* 随机旋转效果 */
+.gsc-timeline-item:nth-child(even) .gsc-comment {
+  transform: rotate(1deg);
+}
+
+.gsc-timeline-item:nth-child(odd) .gsc-comment {
+  transform: rotate(-1deg);
+}
+
+.gsc-comment:hover {
+  transform: rotate(0deg) translateY(-5px) !important;
+  box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 去掉头像圆角，改用那种贴纸感 */
+.gsc-comment-author-avatar {
+  border-radius: 8px !important;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* === 3. 排序按钮优化 === */
+.gsc-header-items button {
+  background-color: var(--color-btn-bg) !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  font-weight: bold !important;
+  font-size: 0.85rem !important;
+}
+
+/* === 4. 表情回应区优化 === */
+.gsc-reactions-button {
+  border: 1.5px dashed var(--color-accent-fg) !important;
+  border-radius: 99px !important;
+  padding: 2px 10px !important;
+}
+
+.gsc-reactions-count {
+  font-weight: 800;
+  color: var(--color-accent-fg);
+}
+
+/* 隐藏 Giscus 标志以保持纯净 */
+.gsc-header .hidden-text {
+  display: none !important;
 }
