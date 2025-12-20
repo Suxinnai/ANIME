@@ -1,0 +1,387 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+    Star,
+    Play,
+    CheckCircle2,
+    TrendingUp,
+    Calendar,
+    Box,
+    Hash,
+    Clock,
+    Heart,
+} from "lucide-react";
+
+// 追番数据
+const animeList = [
+    {
+        title: "葬送のフリーレン",
+        status: "watching",
+        rating: 9.8,
+        cover: "https://l.urusai.cc/e2VHi.png",
+        description:
+            "打败魔王后的勇者一行人，精灵魔法使芙莉莲在漫长的寿命中，重新踏上旅途，去了解人类并寻找过去的足迹。",
+        episodes: "28 episodes",
+        year: "2023",
+        genre: ["奇幻", "治愈"],
+        studio: "Madhouse",
+        link: "https://www.bilibili.com/bangumi/media/md28235284",
+        progress: 16,
+        totalEpisodes: 28,
+    },
+    {
+        title: "CLANNAD",
+        status: "completed",
+        rating: 9.9,
+        cover: "https://i.urusai.cc/bvQmH.webp",
+        description:
+            "冈崎朋也因家庭因素成为不良少年，一直与春原阳平为伍，在光坂高校过着潦倒的生活，但希望终有一天能够离开所在的小镇。",
+        episodes: "23 episodes",
+        year: "2007",
+        genre: ["校园", "治愈"],
+        studio: "Kyoto Animation",
+        link: "https://www.bilibili.com/bangumi/media/md1177",
+        progress: 23,
+        totalEpisodes: 23,
+    },
+    {
+        title: "CLANNAD ～AFTER STORY～",
+        status: "completed",
+        rating: 9.9,
+        cover: "https://i.urusai.cc/ysBYJ.webp",
+        description:
+            "在某个小镇，主角冈崎朋也因家庭因素成为不良少年，一直与春原阳平为伍，在光坂高校过着潦倒的生活。",
+        episodes: "23 episodes",
+        year: "2008",
+        genre: ["校园", "治愈"],
+        studio: "Kyoto Animation",
+        link: "https://www.bilibili.com/bangumi/media/md1178",
+        progress: 23,
+        totalEpisodes: 23,
+    },
+    {
+        title: "AIR (エアー)",
+        status: "completed",
+        rating: 9.8,
+        cover: "https://i.urusai.cc/5lq4v.webp",
+        description:
+            "在一个风和日丽的夏天，旅人来到一个小镇，寻找传说中的“会飞的女孩”。在旅人的回忆中，他想起了三年前的夏天。",
+        episodes: "12 episodes",
+        year: "2005",
+        genre: ["日常", "治愈"],
+        studio: "Kyoto Animation",
+        link: "https://www.bilibili.com/bangumi/media/md1816",
+        progress: 12,
+        totalEpisodes: 12,
+    },
+    {
+        title: "Kanon (2006)",
+        status: "completed",
+        rating: 9.7,
+        cover: "https://i.urusai.cc/9k68v.webp",
+        description:
+            "主人公相泽祐一在七年前的冬天离开了小镇，搬到了城市。七年后，他因为某些原因回到了小镇，并重新遇见了童年时的朋友们。",
+        episodes: "24 episodes",
+        year: "2006",
+        genre: ["校园", "治愈"],
+        studio: "Kyoto Animation",
+        link: "https://www.bilibili.com/bangumi/media/md1375",
+        progress: 24,
+        totalEpisodes: 24,
+    },
+    {
+        title: "Rewrite",
+        status: "completed",
+        rating: 9.5,
+        cover: "https://i.urusai.cc/LmviP.webp",
+        description:
+            "故事发生在一个名为风祭的城市，主人公天王寺瑚太朗是一个普通的高中生，过着平凡的生活。然而，他的生活在遇见了神秘的少女后改变。",
+        episodes: "13 episodes",
+        year: "2016",
+        genre: ["校园", "奇幻"],
+        studio: "Key",
+        link: "https://www.bilibili.com/bangumi/media/md5020",
+        progress: 13,
+        totalEpisodes: 13,
+    },
+    {
+        title: "Rewrite 2nd",
+        status: "completed",
+        rating: 9.5,
+        cover: "https://i.urusai.cc/Jk1BX.webp",
+        description:
+            "故事继续围绕天王寺瑚太朗和小鸟游六花展开，揭示了更多关于风祭城市的秘密和瑚太朗的能力。",
+        episodes: "12 episodes",
+        year: "2017",
+        genre: ["校园", "奇幻"],
+        studio: "Key",
+        link: "https://www.bilibili.com/bangumi/media/md5806",
+        progress: 13,
+        totalEpisodes: 13,
+    },
+    {
+        title: "Charlotte",
+        status: "completed",
+        rating: 9.5,
+        cover: "https://i.urusai.cc/0277S.webp",
+        description:
+            "故事发生在一个拥有特殊能力的少年少女们的世界，主人公乙坂有宇是一个拥有“夺取他人能力”能力的少年。",
+        episodes: "13 episodes",
+        year: "2015",
+        genre: ["校园", "奇幻"],
+        studio: "P.A.Works",
+        link: "https://www.bilibili.com/bangumi/media/md2323",
+        progress: 13,
+        totalEpisodes: 13,
+    },
+    {
+        title: "Angel Beats!",
+        status: "completed",
+        rating: 9.8,
+        cover: "https://i.urusai.cc/IhifX.webp",
+        description:
+            "故事发生在一个名为“死后世界”的地方，主人公音无结弦在一次意外中失去了记忆，醒来后发现自己身处于一个高中校园。",
+        episodes: "13 episodes",
+        year: "2010",
+        genre: ["校园", "奇幻"],
+        studio: "P.A.Works",
+        link: "https://www.bilibili.com/bangumi/media/md959",
+        progress: 13,
+        totalEpisodes: 13,
+    },
+    {
+        title: "ReLIFE",
+        status: "completed",
+        rating: 9.9,
+        cover: "https://i.urusai.cc/Q3sig.webp",
+        description:
+            "故事讲述了一个27岁的失业青年海崎新太，他因为生活的压力和挫折而感到迷茫和无助。一天，他遇见了一个神秘的组织。",
+        episodes: "13 episodes",
+        year: "2016",
+        genre: ["校园", "治愈"],
+        studio: "TMS Ent.",
+        link: "https://www.bilibili.com/bangumi/media/md28229193",
+        progress: 13,
+        totalEpisodes: 13,
+    },
+];
+
+// 统计
+const stats = {
+    total: animeList.length,
+    watching: animeList.filter((a) => a.status === "watching").length,
+    completed: animeList.filter((a) => a.status === "completed").length,
+    avgRating: (
+        animeList.reduce((acc, curr) => acc + curr.rating, 0) / animeList.length
+    ).toFixed(1),
+};
+---
+
+<BaseLayout title="我的追番记录" description="记录我的二次元之旅">
+    <div class="container-custom py-10 relative">
+        <!-- Sakura Background -->
+        <div
+            class="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+            id="sakura-container"
+        >
+            {
+                Array.from({ length: 15 }).map(() => (
+                    <div
+                        class="sakura"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 10}s`,
+                            animationDuration: `${12 + Math.random() * 10}s`,
+                            width: `${12 + Math.random() * 8}px`,
+                            height: `${12 + Math.random() * 8}px`,
+                        }}
+                    />
+                ))
+            }
+        </div>
+
+        <header
+            class="relative z-10 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4"
+        >
+            <div>
+                <h1
+                    class="text-4xl font-display font-black text-anime-dark dark:text-white mb-2 tracking-tight"
+                >
+                    <span class="text-anime-pink">Anime</span> Archive
+                </h1>
+                <p
+                    class="text-anime-dark/60 dark:text-gray-400 font-medium max-w-lg"
+                >
+                    记录每一份感动与热爱。当前共收录 <span
+                        class="text-anime-blue font-bold">{stats.total}</span
+                    > 部作品。
+                </p>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="flex gap-3">
+                <div
+                    class="px-4 py-2 bg-white/80 dark:bg-white/5 rounded-xl border border-anime-dark/10 shadow-sm flex flex-col items-center min-w-[80px]"
+                >
+                    <span class="text-xs font-bold text-gray-400 uppercase"
+                        >Avg Score</span
+                    >
+                    <div
+                        class="flex items-center gap-1 text-anime-yellow font-black text-lg"
+                    >
+                        <Star className="w-4 h-4 fill-current" />
+                        {stats.avgRating}
+                    </div>
+                </div>
+                <div
+                    class="px-4 py-2 bg-white/80 dark:bg-white/5 rounded-xl border border-anime-dark/10 shadow-sm flex flex-col items-center min-w-[80px]"
+                >
+                    <span class="text-xs font-bold text-gray-400 uppercase"
+                        >Completed</span
+                    >
+                    <div
+                        class="flex items-center gap-1 text-anime-pink font-black text-lg"
+                    >
+                        <CheckCircle2 className="w-4 h-4" />
+                        {stats.completed}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Grid: Horizontal Cards for Compactness -->
+        <div
+            class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-5 relative z-10"
+        >
+            {
+                animeList.map((anime) => (
+                    <div class="group relative flex flex-row h-40 sm:h-48 bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-anime-dark dark:border-white/10 shadow-comic hover:shadow-comic-hover hover:-translate-y-1 transition-all duration-300">
+                        {/* Left: Cover Image (Fixed Aspect) */}
+                        <div class="relative w-28 sm:w-36 flex-shrink-0 overflow-hidden border-r-2 border-anime-dark dark:border-white/10">
+                            <img
+                                src={anime.cover}
+                                alt={anime.title}
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+
+                            {/* Rating Overlay */}
+                            <div class="absolute top-0 left-0 bg-anime-yellow text-anime-dark text-xs font-black px-2 py-1 rounded-br-lg border-b-2 border-r-2 border-anime-dark shadow-sm z-10">
+                                {anime.rating}
+                            </div>
+                        </div>
+
+                        {/* Right: Content */}
+                        <div class="flex-1 p-3 sm:p-4 flex flex-col relative overflow-hidden">
+                            {/* Background Deco */}
+                            <div class="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
+                                <Heart className="w-12 h-12 text-anime-pink" />
+                            </div>
+
+                            <div class="flex justify-between items-start gap-2 mb-1">
+                                <h3 class="text-base sm:text-lg font-display font-bold text-anime-dark dark:text-white line-clamp-1 group-hover:text-anime-blue transition-colors">
+                                    {anime.title}
+                                </h3>
+                                {/* Status Badge */}
+                                <div
+                                    class={`flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border flex items-center gap-1 ${
+                                        anime.status === "watching"
+                                            ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20"
+                                            : "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20"
+                                    }`}
+                                >
+                                    {anime.status === "watching" ? (
+                                        <Play className="w-2.5 h-2.5 fill-current" />
+                                    ) : (
+                                        <CheckCircle2 className="w-2.5 h-2.5" />
+                                    )}
+                                    {anime.status === "watching"
+                                        ? "追番中"
+                                        : "已追完"}
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-x-3 gap-y-1 mb-2 text-[10px] font-bold text-anime-dark/50 dark:text-gray-500 uppercase tracking-wider">
+                                <span class="text-anime-dark/70 dark:text-gray-300">
+                                    {anime.year}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <Box className="w-3 h-3" /> {anime.studio}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />{" "}
+                                    {anime.episodes}
+                                </span>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 sm:line-clamp-3 leading-relaxed mb-auto">
+                                {anime.description}
+                            </p>
+
+                            {/* Footer Tags & Action */}
+                            <div class="flex items-end justify-between mt-2 pt-2 border-t border-dashed border-gray-200 dark:border-white/10">
+                                <div class="flex gap-1.5 flex-wrap">
+                                    {anime.genre.map((g) => (
+                                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-anime-blue/10 text-anime-blue dark:bg-blue-500/20 dark:text-blue-300">
+                                            #{g}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                <a
+                                    href={anime.link}
+                                    target="_blank"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-anime-pink text-white border-2 border-anime-dark shadow-comic-sm hover:scale-110 active:scale-95 transition-all"
+                                    title="Watch on Bilibili"
+                                >
+                                    <Play className="w-4 h-4 fill-current" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</BaseLayout>
+
+<style>
+    /* Sakura Animation */
+    .sakura {
+        position: absolute;
+        background-color: #ffb7c5;
+        border-radius: 100% 0 100% 0;
+        opacity: 0.3;
+        transform: rotate(45deg);
+        animation: fall linear infinite;
+        will-change: transform, opacity;
+    }
+
+    .sakura::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #ffb7c5;
+        border-radius: 100% 0 100% 0;
+        transform: rotate(-10deg);
+        left: 2px;
+    }
+
+    @keyframes fall {
+        0% {
+            transform: translateY(-10vh) rotate(45deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.5;
+        }
+        90% {
+            opacity: 0.5;
+        }
+        100% {
+            transform: translateY(110vh) translateX(50px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>
