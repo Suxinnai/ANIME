@@ -1,205 +1,146 @@
 /*!
- * Giscus Anime Theme
- * 仿照博客站点的动漫风格配色
+ * Giscus Anime Theme (Clean Version)
+ * 修复版：针对清晰度和布局稳定性优化
  */
 
 main {
-  /* 基础配色 - 对应您博客的 --anime-pink */
+  /* 基础配色 - 提取自您的博客主题 */
   --color-prettylights-syntax-comment: #8b949e;
-  --color-prettylights-syntax-constant: #79c0ff;
-  --color-prettylights-syntax-entity: #d2a8ff;
-  --color-prettylights-syntax-storage-modifier-import: #c9d1d9;
-  --color-prettylights-syntax-entity-tag: #7ee787;
-  --color-prettylights-syntax-keyword: #ff7b72;
   --color-prettylights-syntax-string: #a5d6ff;
-  --color-prettylights-syntax-variable: #ffa657;
-  --color-prettylights-syntax-brackethighlighter-unmatched: #f0f6fc;
-  --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;
-  --color-prettylights-syntax-invalid-illegal-bg: #8b080b;
-  --color-prettylights-syntax-carriage-return-text: #f0f6fc;
-  --color-prettylights-syntax-carriage-return-bg: #b62324;
-  --color-prettylights-syntax-string-regexp: #7ee787;
-  --color-prettylights-syntax-markup-list: #f2cc60;
-  --color-prettylights-syntax-markup-heading: #1f6feb;
-  --color-prettylights-syntax-markup-italic: #c9d1d9;
-  --color-prettylights-syntax-markup-bold: #c9d1d9;
-  --color-prettylights-syntax-markup-deleted-text: #ffdcd7;
-  --color-prettylights-syntax-markup-deleted-bg: #67060c;
-  --color-prettylights-syntax-markup-inserted-text: #aff5b4;
-  --color-prettylights-syntax-markup-inserted-bg: #033a16;
-  --color-prettylights-syntax-markup-changed-text: #ffdfb6;
-  --color-prettylights-syntax-markup-changed-bg: #5a1e02;
-  --color-prettylights-syntax-markup-ignored-text: #c9d1d9;
-  --color-prettylights-syntax-markup-ignored-bg: #1158c7;
-  --color-prettylights-syntax-meta-diff-range: #d2a8ff;
-  --color-prettylights-syntax-brackethighlighter-angle: #8b949e;
-  --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
-  --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
 
   /* 核心变量重写 */
   --color-btn-text: #ffffff;
   --color-btn-bg: #ff8fab;
-  /* 按钮背景 - 动漫粉 */
-  --color-btn-border: rgba(255, 255, 255, 0.1);
-  --color-btn-shadow: 0 0 transparent;
+  --color-btn-border: transparent;
+  --color-btn-shadow: 0 4px 10px rgba(255, 143, 171, 0.3);
   --color-btn-inset-shadow: 0 0 transparent;
   --color-btn-hover-bg: #ff769b;
-  /* 按钮悬停 - 深粉 */
-  --color-btn-hover-border: rgba(255, 255, 255, 0.1);
-  --color-btn-selected-bg: #ff769b;
+  --color-btn-hover-border: transparent;
+  --color-btn-selected-bg: #ff5c8d;
+
   --color-btn-primary-text: #ffffff;
   --color-btn-primary-bg: #ff8fab;
-  /* 主要按钮背景 */
-  --color-btn-primary-border: rgba(255, 255, 255, 0.1);
-  --color-btn-primary-shadow: 0 0 transparent;
-  --color-btn-primary-inset-shadow: 0 0 transparent;
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-shadow: 0 4px 15px rgba(255, 143, 171, 0.4);
   --color-btn-primary-hover-bg: #ff769b;
-  --color-btn-primary-hover-border: rgba(255, 255, 255, 0.1);
-  --color-btn-primary-selected-bg: #ff769b;
-  --color-btn-primary-selected-shadow: 0 0 transparent;
-  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.5);
-  --color-btn-primary-disabled-bg: #ffb3c6;
-  --color-btn-primary-disabled-border: rgba(255, 255, 255, 0.1);
 
-  /* 输入框与背景 */
-  --color-canvas-default: transparent;
-  /* 背景透明 */
+  /* 背景与边框 - 增加画布感 */
+  --color-canvas-default: #ffffff;
+  /* 纯白背景保证清晰 */
   --color-canvas-overlay: #ffffff;
-  --color-canvas-inset: transparent;
-  --color-border-default: transparent;
-  /* 去掉边框 */
-  --color-border-muted: rgba(127, 127, 127, 0.2);
-  --color-neutral-muted: rgba(127, 127, 127, 0.1);
-  --color-accent-fg: #ff8fab;
-  /* 链接颜色 */
-  --color-accent-emphasis: #ff8fab;
-  --color-accent-muted: rgba(255, 143, 171, 0.4);
-  --color-accent-subtle: rgba(255, 143, 171, 0.1);
+  --color-canvas-inset: #fcfcfc;
+  --color-border-default: #f0f0f0;
+  --color-border-muted: #f5f5f5;
 
-  /* 字体和文字 */
+  /* 文字颜色 */
   --color-fg-default: #2b2d42;
-  --color-fg-muted: #6e7082;
-  --color-fg-subtle: #8b949e;
-  --color-canvas-default-transparent: rgba(255, 255, 255, 0);
+  --color-fg-muted: #8d99ae;
+  --color-fg-subtle: #b8c0cc;
 
-  /* 输入框特定样式 */
-  --color-input-bg: rgba(255, 255, 255, 0.5);
-  --color-input-contrast-bg: rgba(255, 255, 255, 0.8);
-  --color-input-border: rgba(0, 0, 0, 0.1);
+  /* 链接 */
+  --color-accent-fg: #ff8fab;
+  --color-accent-emphasis: #ff769b;
 }
 
 /* 深色模式适配 */
 @media (prefers-color-scheme: dark) {
   main {
+    --color-canvas-default: #1e1e24;
+    /* 深色背景 */
+    --color-canvas-overlay: #252630;
+    --color-canvas-inset: #1a1a20;
+    --color-border-default: #333;
+    --color-border-muted: #2a2a2a;
+
     --color-fg-default: #f0f6fc;
     --color-fg-muted: #8b949e;
-    --color-input-bg: rgba(0, 0, 0, 0.2);
-    --color-input-contrast-bg: rgba(0, 0, 0, 0.4);
     --color-btn-bg: #ff769b;
-    --color-accent-fg: #ffb3c6;
   }
 }
 
-/* === 1. 把所有“评论”字样替换为“留言” === */
-/* 这里的逻辑是通过 CSS 隐藏原文字并用 content 替换，仅在支持的浏览器生效 */
-.gsc-header .gsc-comments-count {
-  visibility: hidden;
-  position: relative;
-  font-size: 0;
+/* === 容器与卡片优化 === */
+
+/* 输入框区域：增加信纸感 */
+.gsc-comment-box {
+  background-color: var(--color-canvas-default);
+  border: 2px solid var(--color-border-muted);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
 }
 
-.gsc-header .gsc-comments-count::after {
-  content: "条留言";
-  visibility: visible;
-  position: absolute;
-  left: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
+.gsc-comment-box-textarea {
+  background-color: var(--color-canvas-inset);
+  border-radius: 12px;
+  border: 1px solid transparent;
 }
 
-/* 修改输入框 Placeholder - 这是一个黑魔法途径 */
-.gsc-comment-box-textarea::placeholder {
-  color: transparent !important;
+.gsc-comment-box-textarea:focus {
+  border-color: var(--color-accent-fg);
 }
 
-.gsc-comment-box-main::before {
-  content: "在此刻下你的期许，愿时光温柔以待...";
-  position: absolute;
-  top: 2.5rem;
-  left: 1.5rem;
-  color: var(--color-fg-subtle);
-  pointer-events: none;
-  font-style: italic;
-  opacity: 0.7;
-  z-index: 1;
-}
-
-/* 当输入框有内容或聚焦时隐藏自定义 placeholder */
-.gsc-comment-box-main:focus-within::before,
-.gsc-comment-box-textarea:not(:placeholder-shown)+.gsc-comment-box-main::before {
-  display: none;
-}
-
-/* === 2. 便签纸风格的留言卡片 === */
+/* 评论卡片：清理样式 */
 .gsc-comment {
-  background-color: #fffdf2 !important;
-  /* 浅黄色便签感 */
   border: none !important;
-  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.05) !important;
-  padding: 1.5rem !important;
-  margin-bottom: 2rem !important;
+  background-color: transparent !important;
+  /* 移除便签底色，因为会导致嵌套问题 */
+}
+
+/* 评论内容气泡化 */
+.gsc-comment-content {
+  background-color: var(--color-canvas-inset);
+  border-radius: 16px;
+  padding: 16px 20px;
   position: relative;
-  transition: transform 0.3s ease;
+  border: 1px solid var(--color-border-muted);
 }
 
-.dark .gsc-comment {
-  background-color: #2d2a1b !important;
-  color: #f0f6fc !important;
+/* 气泡小三角 (仅在非深色模式显示) */
+@media (prefers-color-scheme: light) {
+  .gsc-comment-content::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-canvas-inset);
+    transform: rotate(45deg);
+    border-left: 1px solid var(--color-border-muted);
+    border-bottom: 1px solid var(--color-border-muted);
+  }
 }
 
-/* 随机旋转效果 */
-.gsc-timeline-item:nth-child(even) .gsc-comment {
-  transform: rotate(1deg);
+/* 头部 Header 清理 */
+.gsc-header {
+  padding-bottom: 1rem;
+  border-bottom: 2px dashed var(--color-border-default);
+  margin-bottom: 1.5rem;
 }
 
-.gsc-timeline-item:nth-child(odd) .gsc-comment {
-  transform: rotate(-1deg);
-}
-
-.gsc-comment:hover {
-  transform: rotate(0deg) translateY(-5px) !important;
-  box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* 去掉头像圆角，改用那种贴纸感 */
-.gsc-comment-author-avatar {
+/* 按钮样式统一 */
+button {
   border-radius: 8px !important;
-  border: 2px solid white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: 700 !important;
+  transition: all 0.2s ease;
 }
 
-/* === 3. 排序按钮优化 === */
-.gsc-header-items button {
-  background-color: var(--color-btn-bg) !important;
-  border-radius: 8px !important;
-  padding: 4px 12px !important;
-  font-weight: bold !important;
-  font-size: 0.85rem !important;
+button:hover {
+  transform: translateY(-2px);
 }
 
-/* === 4. 表情回应区优化 === */
-.gsc-reactions-button {
-  border: 1.5px dashed var(--color-accent-fg) !important;
-  border-radius: 99px !important;
-  padding: 2px 10px !important;
-}
-
+/* 表情回应区 */
 .gsc-reactions-count {
-  font-weight: 800;
-  color: var(--color-accent-fg);
+  display: none;
+  /* 隐藏原本的统计文字，太乱 */
 }
 
-/* 隐藏 Giscus 标志以保持纯净 */
-.gsc-header .hidden-text {
+.gsc-reactions-button {
+  border: 1px solid var(--color-border-muted) !important;
+  border-radius: 20px !important;
+}
+
+/* 隐藏干扰元素 */
+.gsc-homepage-bg {
   display: none !important;
 }
