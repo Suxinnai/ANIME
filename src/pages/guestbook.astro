@@ -174,9 +174,7 @@ import { MessageSquare, Heart, Sparkles } from "lucide-react";
         const isDarkMode = document.documentElement.classList.contains("dark");
         const theme = isDarkMode ? "dark" : "light";
 
-        // 构建自定义 CSS 的绝对路径
-        // 注意：在 localhost 本地运行时，Giscus 无法读取此文件，将回退到默认样式
-        // 部署到公网 (Vercel) 后，自定义粉色主题将自动生效
+        // 构建自定义 CSS 的绝对路径 (Vercel 部署后生效)
         const customThemeUrl = `${window.location.origin}/giscus.css`;
 
         // 创建 script 标签
@@ -191,7 +189,6 @@ import { MessageSquare, Heart, Sparkles } from "lucide-react";
         script.setAttribute("data-reactions-enabled", "1");
         script.setAttribute("data-emit-metadata", "0");
         script.setAttribute("data-input-position", "top");
-        // 使用自定义主题 URL
         script.setAttribute("data-theme", customThemeUrl);
         script.setAttribute("data-lang", "zh-CN");
         script.setAttribute("crossorigin", "anonymous");
@@ -203,7 +200,7 @@ import { MessageSquare, Heart, Sparkles } from "lucide-react";
     // 初始加载
     loadGiscus();
 
-    // 监听主题切换 (此处为了简化，暂时 unified 使用自定义主题，或者您可以准备 giscus-dark.css)
+    // 监听主题切换
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
