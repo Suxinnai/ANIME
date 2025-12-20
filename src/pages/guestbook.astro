@@ -84,41 +84,54 @@ import { MessageSquare, Heart, Sparkles } from "lucide-react";
                     </ul>
                 </div>
 
-                <!-- Stats Card -->
+                <!-- Connect Card -->
                 <div
                     class="bg-white dark:bg-white/5 border-2 border-anime-dark dark:border-white/10 rounded-2xl p-6 shadow-comic-sm dark:shadow-none"
                 >
                     <h3
                         class="font-display font-bold text-lg text-anime-dark dark:text-white mb-4 flex items-center gap-2"
                     >
-                        留言统计
+                        关于本站
                         <Heart
                             className="w-4 h-4 text-anime-pink fill-current"
                         />
                     </h3>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-4">
                         <div
-                            class="p-3 bg-gray-50 dark:bg-white/5 rounded-xl border border-anime-dark/5"
+                            class="p-4 bg-anime-pink/5 rounded-xl border border-anime-pink/20"
                         >
-                            <div
-                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1"
+                            <p
+                                class="text-sm text-anime-dark/80 dark:text-gray-300 leading-relaxed"
                             >
-                                总计留言
-                            </div>
-                            <div class="text-sm font-black text-anime-pink">
-                                99+
-                            </div>
+                                欢迎来到我的<span
+                                    class="font-bold text-anime-pink"
+                                    >异世界存档点</span
+                                >！这里每一条留言都是一段珍贵的记忆。如果你也喜欢二次元，不妨留下你的
+                                ID 吧！✨
+                            </p>
                         </div>
-                        <div
-                            class="p-3 bg-gray-50 dark:bg-white/5 rounded-xl border border-anime-dark/5"
-                        >
+
+                        <div class="grid grid-cols-2 gap-3">
                             <div
-                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1"
+                                class="p-2 bg-gray-50 dark:bg-white/5 rounded-lg text-center"
                             >
-                                今日新增
+                                <span class="block text-xs text-gray-400 mb-1"
+                                    >管理员</span
+                                >
+                                <span
+                                    class="font-bold text-anime-dark dark:text-white"
+                                    >Suxinnai</span
+                                >
                             </div>
-                            <div class="text-sm font-black text-anime-blue">
-                                7
+                            <div
+                                class="p-2 bg-gray-50 dark:bg-white/5 rounded-lg text-center"
+                            >
+                                <span class="block text-xs text-gray-400 mb-1"
+                                    >坐标</span
+                                >
+                                <span class="font-bold text-anime-blue"
+                                    >异世界</span
+                                >
                             </div>
                         </div>
                     </div>

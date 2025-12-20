@@ -1,6 +1,6 @@
 /*!
- * Giscus Anime Theme (Sticky Note Version - Restored & Optimized)
- * 便签纸风格回归 + 清晰度增强
+ * Giscus Anime Theme (Final Polish)
+ * 极致优化版：隐藏冗余元素，强化按钮交互
  */
 
 main {
@@ -17,14 +17,12 @@ main {
   --color-btn-primary-bg: #ff8fab;
   --color-btn-primary-hover-bg: #ff769b;
 
-  /* 全局文字颜色 - 加深以保证清晰度 */
+  /* 全局文字颜色 */
   --color-fg-default: #2b2d42;
-  /* 深蓝黑，比纯黑更柔和但足够清晰 */
   --color-fg-muted: #5a5c6e;
-  /* 次级文字也加深 */
   --color-fg-subtle: #8b949e;
 
-  /* 透明设定，以便透出我们的便签背景 */
+  /* 透明设定 */
   --color-canvas-default: transparent;
   --color-canvas-overlay: #ffffff;
   --color-canvas-inset: transparent;
@@ -32,10 +30,9 @@ main {
   --color-border-muted: rgba(0, 0, 0, 0.1);
 
   /* 输入框 */
-  --color-input-bg: rgba(255, 255, 255, 0.8);
-  /* 提高不透明度，防看不清 */
+  --color-input-bg: #ffffff;
   --color-input-contrast-bg: #ffffff;
-  --color-input-border: rgba(0, 0, 0, 0.15);
+  --color-input-border: rgba(0, 0, 0, 0.1);
 
   --color-accent-fg: #ff8fab;
 }
@@ -46,23 +43,40 @@ main {
     --color-fg-default: #f0f6fc;
     --color-fg-muted: #a0a6ac;
     --color-btn-bg: #ff769b;
-    --color-input-bg: rgba(255, 255, 255, 0.1);
+    --color-input-bg: #1a1a20;
+    --color-input-border: #444;
   }
 }
 
-/* === 1. 核心布局修复：留言板Hack === */
-/* 隐藏原来的"评论" */
+/* === 1. 布局大清洗 === */
+/* 隐藏排序按钮 (最早/最新) - 您的核心需求 */
+.gsc-header-items {
+  display: none !important;
+}
+
+/* 优化 Header 布局：让“留言板”文字与下方的Powered by对齐 */
+.gsc-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px dashed rgba(0, 0, 0, 0.05);
+  /* 虚线分割，更像便签 */
+}
+
+/* 留言板标题 Hack (继续保留，效果很好) */
 .gsc-header .gsc-comments-count {
   visibility: hidden;
   position: relative;
   font-size: 0;
-  width: 100px;
-  /* 占位防止塌陷 */
+  height: 30px;
+  display: block;
 }
 
-/* 重新显示"留言" */
 .gsc-header .gsc-comments-count::after {
-  content: "留言板 Message";
+  content: "留言板";
   visibility: visible;
   position: absolute;
   top: 0;
@@ -70,80 +84,122 @@ main {
   font-size: 1.5rem;
   font-weight: 900;
   color: var(--color-fg-default);
-  white-space: nowrap;
+  letter-spacing: 2px;
 }
 
-/* === 2. 便签纸风格回归 === */
+/* 优化 "由 giscus 提供支持" 的排版 */
+.gsc-header>.gsc-comments-count+div {
+  font-size: 0.8rem !important;
+  opacity: 0.6;
+  margin-top: -10px;
+  /* 拉近与标题的距离 */
+  font-style: italic;
+}
+
+/* === 2. 提交按钮 (增加样式及动画) === */
+.gsc-main .gsc-button-primary {
+  background: linear-gradient(135deg, #ff8fab 0%, #ffc2d1 100%) !important;
+  border: none !important;
+  border-radius: 99px !important;
+  padding: 8px 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px;
+  color: white !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(255, 143, 171, 0.3);
+}
+
+.gsc-main .gsc-button-primary:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 143, 171, 0.5);
+  filter: brightness(1.05);
+}
+
+.gsc-main .gsc-button-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* === 3. 表情 UI 优化 === */
+/* 顶部表情统计区 (通常是"0个表情") - 隐藏它，没啥用且占地 */
+.gsc-reactions-count {
+  display: none !important;
+}
+
+/* 评论内容底部的表情按钮 */
+.gsc-reactions-button {
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 12px !important;
+  transition: transform 0.2s;
+}
+
+.gsc-reactions-button:hover {
+  transform: scale(1.1);
+  background: white !important;
+}
+
+/* === 4. 便签纸风格核心 === */
 .gsc-comment {
   background-color: #fffdf2 !important;
-  /* 经典黄便签 */
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.02) !important;
   box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.08) !important;
-  /* 加深阴影 */
   padding: 1.5rem !important;
   margin-bottom: 2rem !important;
-  border-radius: 2px !important;
-  /* 稍微方一点更有纸感 */
+  border-radius: 4px !important;
   position: relative;
-  transition: transform 0.3s ease;
 }
 
-/* 便签纹理 - 可选 */
+/* 顶部胶带装饰 */
 .gsc-comment::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 24px;
-  background: rgba(0, 0, 0, 0.02);
-  /* 顶部胶带感 */
-  border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 100px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .dark .gsc-comment {
   background-color: #2d2a1b !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
   color: #e6edf3 !important;
 }
 
-/* 随机旋转 - 恢复生动感 */
+/* 旋转效果 */
 .gsc-timeline-item:nth-child(even) .gsc-comment {
   transform: rotate(1deg);
 }
 
 .gsc-timeline-item:nth-child(odd) .gsc-comment {
-  transform: rotate(-0.5deg);
+  transform: rotate(-1deg);
 }
 
 .gsc-comment:hover {
   transform: rotate(0deg) scale(1.01) !important;
-  box-shadow: 5px 12px 20px rgba(0, 0, 0, 0.12) !important;
-  z-index: 10;
+  z-index: 5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* === 3. 输入框优化 === */
-/* 强制增加白色底板，防止透明看不清 */
+/* === 5. 输入框强化 === */
 .gsc-comment-box {
   background-color: #ffffff !important;
   border: 2px solid var(--color-input-border);
-  border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 2rem;
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 3rem;
+  /* 增加底部间距 */
 }
 
 .dark .gsc-comment-box {
   background-color: #1a1a20 !important;
-  border-color: #444;
 }
 
-/* 占位符Hack - 恢复您的定制文案 */
+/* 占位符继续保持 */
 .gsc-comment-box-textarea::placeholder {
   color: transparent !important;
-}
-
-.gsc-comment-box-main {
-  position: relative;
 }
 
 .gsc-comment-box-main::after {
@@ -153,10 +209,9 @@ main {
   left: 50%;
   transform: translate(-50%, -50%);
   color: var(--color-fg-muted);
-  pointer-events: none;
-  font-style: italic;
   font-size: 0.9rem;
-  opacity: 0.6;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* 输入时隐藏 */
@@ -165,17 +220,9 @@ main {
   display: none;
 }
 
-/* === 4. 其他细节 === */
-/* 头像贴纸化 */
+/* 头像圆形 */
 .gsc-comment-author-avatar {
-  border-radius: 6px !important;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 按钮圆润化 */
-.gsc-header-items button,
-.gsc-social-reaction-summary-item {
-  border-radius: 20px !important;
-  font-weight: bold;
+  border-radius: 50% !important;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
