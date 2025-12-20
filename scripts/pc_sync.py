@@ -38,15 +38,37 @@ client = OpenAI(
 user32 = ctypes.windll.user32
 
 # ================= 辅助函数 =================
-def get_active_window_title():
+def get_active_window_info():
+    """获取前台窗口信息：进程名和窗口标题"""
     try:
         hwnd = user32.GetForegroundWindow()
+        
+        # 获取窗口标题
         length = user32.GetWindowTextLengthW(hwnd)
-        buff = ctypes.create_unicode_buffer(length + 1)
-        user32.GetWindowTextW(hwnd, buff, length + 1)
-        return buff.value
+        title_buff = ctypes.create_unicode_buffer(length + 1)
+        user32.GetWindowTextW(hwnd, title_buff, length + 1)
+        window_title = title_buff.value
+        
+        # 获取进程ID
+        pid = wintypes.DWORD()
+        user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+        
+        # 获取进程名
+        process_name = ""
+        try:
+            process = psutil.Process(pid.value)
+            process_name = process.name()  # 例如: "chrome.exe"
+        except:
+            pass
+        
+        return process_name, window_title
     except:
-        return ""
+        return "", ""
+
+def get_active_window_title():
+    """兼容性函数，只返回标题"""
+    _, title = get_active_window_info()
+    return title
 
 async def get_media_info_async():
     """使用 Windows Media API 获取当前播放的媒体信息"""
@@ -157,55 +179,86 @@ def sync_loop():
 
     while True:
         try:
-            # 1. 获取基础信息
-            active_window = get_active_window_title() or "Desktop"
+            # 1. 获取基础信息（进程名 + 窗口标题）
+            process_name, window_title = get_active_window_info()
+            # print(f"[Debug] Process: {process_name} | Title: {window_title}") 
             current_network = get_network_type()
 
-            # 2. 智能状态推断
-            display_text = active_window
-            pkg_name = active_window
+            # 2. 智能应用识别（优先使用进程名）
+            app_display_name = window_title or "Desktop"  # 默认显示窗口标题
+            app_category = "other"  # 默认分类
             is_music_mode = False
             music_context = ""
-            app_category = "other"  # 默认分类
             
-            # 应用分类规则
-            lower_window = active_window.lower()
+            # 基于进程名的精准识别
+            lower_proc = process_name.lower()
             
-            # 浏览器
-            if any(x in lower_window for x in ["chrome", "edge", "comet", "浏览器", "firefox"]):
+            # 浏览器（保留网页标题作为显示内容）
+            if any(x in lower_proc for x in ["chrome", "edge", "firefox", "brave", "opera", "msedge"]):
                 app_category = "browser"
-                display_text = "Browsing"
-            # 通讯软件
-            elif any(x in lower_window for x in ["qq", "微信", "wechat", "telegram", "tim"]) and "qq音乐" not in lower_window:
-                app_category = "chat"
-                display_text = "Chatting"
-            # 编程软件
-            elif any(x in lower_window for x in ["visual studio code", "vscode", "cursor", "kiro", "antigravity", "pycharm", "intellij"]):
-                app_category = "coding"
-                display_text = "Coding"
+                # 浏览器使用网页标题，但截断过长标题
+                if window_title and len(window_title) > 50:
+                    app_display_name = window_title[:47] + "..."
+                elif window_title:
+                    app_display_name = window_title
+                else:
+                    # 如果没有标题，才用浏览器名
+                    if "chrome" in lower_proc:
+                        app_display_name = "Google Chrome"
+                    elif "edge" in lower_proc or "msedge" in lower_proc:
+                        app_display_name = "Microsoft Edge"
+                    elif "firefox" in lower_proc:
+                        app_display_name = "Firefox"
+                    else:
+                        app_display_name = "Browser"
             
-            # 优先使用 Windows Media API 检测音乐 (覆盖上面的分类)
+            # 编程软件
+            elif any(x in lower_proc for x in ["code", "cursor", "pycharm", "intellij", "devenv"]):
+                app_category = "coding"
+                if "code" in lower_proc:
+                    app_display_name = "Visual Studio Code"
+                elif "cursor" in lower_proc:
+                    app_display_name = "Cursor"
+                elif "pycharm" in lower_proc:
+                    app_display_name = "PyCharm"
+                else:
+                    app_display_name = "IDE"
+            
+            # 通讯软件
+            elif any(x in lower_proc for x in ["qq.exe", "wechat", "telegram", "discord", "tim"]):
+                app_category = "chat"
+                if "qq" in lower_proc and "音乐" not in lower_proc:
+                    app_display_name = "QQ"
+                elif "wechat" in lower_proc:
+                    app_display_name = "WeChat"
+                elif "telegram" in lower_proc:
+                    app_display_name = "Telegram"
+                else:
+                    app_display_name = "Messaging"
+            
+            # 如果进程名没匹配到，回退到窗口标题检测
+            elif app_category == "other":
+                lower_win = window_title.lower()
+                if any(x in lower_win for x in ["chrome", "firefox", "edge"]):
+                    app_category = "browser"
+                elif any(x in lower_win for x in ["visual studio code", "vscode"]):
+                    app_category = "coding"
+            
+            # 优先使用 Windows Media API 检测音乐 (不覆盖前台应用分类)
             is_playing, song_title, song_artist = get_media_info()
             
             if is_playing and song_title:
                 is_music_mode = True
-                app_category = "music"
+                # 注意：不要改 app_category，保留前台应用的真实分类
                 if song_artist:
-                    display_text = f"🎵 {song_title} - {song_artist}"
                     music_context = f"{song_title} - {song_artist}"
                 else:
-                    display_text = f"🎵 {song_title}"
                     music_context = song_title
-                pkg_name = music_context
                 print(f"[Media API] Detected: {music_context}")
-            
-            # 如果标题太长，截断
-            if app_category == "other" and len(active_window) > 20:
-                display_text = active_window[:20] + "..."
 
             # 3. AI 生成 (减少频率，只有状态根本改变时才生成)
             # AI 的上下文：如果有音乐，用音乐生成心情；否则用当前应用
-            ai_context_key = music_context if is_music_mode else active_window
+            ai_context_key = music_context if is_music_mode else app_display_name
             
             # 只有当状态改变，或者每隔 5 分钟 (100次循环) 重新生成一次以保持新鲜感
             if ai_context_key != last_context:
@@ -221,11 +274,11 @@ def sync_loop():
             # category: 当前应用的分类 (图标用) - 如果在听歌，右下角会覆盖 category 显示 CD 样式，但图标仍可保留
             
             payload = {
-                "app": active_window,        # 灵动岛始终显示前台应用
-                "pkg": active_window,        # 兼容旧逻辑
+                "app": app_display_name,      # 灵动岛显示友好应用名
+                "pkg": window_title,          # 保留原始窗口标题备用
                 "track": music_context if is_music_mode else None, # 新增：专门的音乐字段
-                "mood": last_ai_text,        # AI 吐槽
-                "category": app_category,    # 应用分类
+                "mood": last_ai_text,         # AI 吐槽
+                "category": app_category,     # 应用分类
                 "network": current_network,
                 "device": "RedmiBook Pro 15 2021",
                 "location": "重庆",
@@ -235,7 +288,7 @@ def sync_loop():
             url = f"{API_URL}?secret={SECRET}"
             requests.post(url, json=payload, timeout=5, verify=False)
             
-            print(f"Synced: App={active_window} | Music={music_context if is_music_mode else 'None'} | Cat={app_category}")
+            print(f"Synced: App={app_display_name} | Music={music_context if is_music_mode else 'None'} | Cat={app_category}")
             
         except Exception as e:
             print(f"Sync Logic Error: {e}")

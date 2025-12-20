@@ -57,11 +57,11 @@ export default function DigitalTwinReact() {
     const NetworkIcon = getNetworkIcon(data.network);
 
     // 当前应用 (Header Always Shows Activate App)
-    const activeApp = data.app || "System Idle";
+    const activeApp = data.isOffline ? "Disconnected" : (data.app || "System Idle");
 
     // 音乐检测 (Bottom Widget Only)
     const currentTrack = data.track;
-    const isPlayingMusic = !!currentTrack;
+    const isPlayingMusic = !!currentTrack && !data.isOffline;
 
     // 显示名称处理
     // Header 使用 activeApp
@@ -84,6 +84,7 @@ export default function DigitalTwinReact() {
 
     // 状态文案生成 (基于分类)
     const getStatusText = () => {
+        if (data.isOffline) return "正在睡觉中... 😴";
         const category = data.category || 'other';
 
         switch (category) {
@@ -133,7 +134,7 @@ export default function DigitalTwinReact() {
                                     {activeApp}
                                 </span>
                             </div>
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse ml-1 flex-shrink-0"></div>
+                            <div className={`w-1.5 h-1.5 rounded-full ${data.isOffline ? 'bg-gray-400' : 'bg-green-400 animate-pulse'} ml-1 flex-shrink-0`}></div>
                         </div>
                     </div>
 
@@ -161,11 +162,11 @@ export default function DigitalTwinReact() {
                             style={{ filter: 'drop-shadow(0 0 30px rgba(59, 130, 246, 0.15))' }}
                         />
 
-                        {/* AI Speech Bubble - Redesigned (Glassmorphism, Softer) */}
-                        {data.mood && (
+                        {/* AI Speech Bubble */}
+                        {(data.mood || data.isOffline) && (
                             <div className="absolute top-32 -right-4 max-w-[130px]">
                                 <div className="relative bg-white/80 dark:bg-black/60 backdrop-blur-md border border-anime-pink/30 text-anime-dark dark:text-gray-100 text-[10px] font-medium px-3 py-2.5 rounded-2xl rounded-tl-none shadow-sm leading-relaxed break-words animate-[float_4s_ease-in-out_infinite]">
-                                    {data.mood}
+                                    {data.isOffline ? "Zzz... 已经休息啦~ 下次再见！" : data.mood}
                                     {/* Small Triangle Indicator */}
                                     <div className="absolute -left-1.5 top-0 w-2 h-2 bg-white/80 dark:bg-black/60 border-l border-b border-anime-pink/30 transform rotate-45"></div>
                                 </div>
@@ -207,7 +208,7 @@ export default function DigitalTwinReact() {
                                 {/* Scrolling Title */}
                                 <div className="w-full overflow-hidden whitespace-nowrap mask-linear-fade">
                                     <span className="text-[11px] font-bold text-anime-dark dark:text-white inline-block animate-[scroll_10s_linear_infinite]">
-                                        {currentTrack} &nbsp;&nbsp;&nbsp; {currentTrack}
+                                        🎵 {currentTrack} &nbsp;&nbsp;&nbsp; 🎵 {currentTrack}
                                     </span>
                                 </div>
                                 {/* Status / Artist (Showing AI Mood as Pseudo-Lyrics) */}
@@ -226,7 +227,7 @@ export default function DigitalTwinReact() {
                     ) : (
                         // Standard Activity Mode: Clean Bubble
                         <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-white/70 dark:bg-black/40 backdrop-blur-md rounded-full border border-anime-dark/5 dark:border-white/5 shadow-sm hover:shadow-md transition-all">
-                            <div className={`w-2 h-2 rounded-full ${(data.category || 'other') === 'offline' ? 'bg-gray-400' : 'bg-green-500 animate-pulse'}`}></div>
+                            <div className={`w-2 h-2 rounded-full ${data.isOffline || (data.category || 'other') === 'offline' ? 'bg-gray-400' : 'bg-green-500 animate-pulse'}`}></div>
                             <span className="text-[10px] font-bold text-anime-dark dark:text-white tracking-widest">
                                 {statusText}
                             </span>

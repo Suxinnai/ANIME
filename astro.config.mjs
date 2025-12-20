@@ -17,6 +17,10 @@ export default defineConfig({
     react(),
   ],
 
+  server: {
+    host: '::',
+  },
+
   prefetch: true,
 
   // 如果你构建时报 sitemap 需要 site，就加上这一行：

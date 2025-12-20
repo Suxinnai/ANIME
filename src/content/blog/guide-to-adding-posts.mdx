@@ -1,0 +1,119 @@
+---
+title: "Markdown 创作全指南：从基础语法到高级 MDX 交互"
+description: "一份详尽的参考手册，涵盖了 Markdown 核心语法、Frontmatter 配置、多媒体嵌入（B站/YouTube）以及高度自定义的 MDX 交互组件。"
+pubDate: 2025-12-20
+coverImage: "/车站.jpg"
+tags: ["Tutorial", "Markdown", "MDX", "Guide"]
+---
+
+import { DailyQuote } from '../../components/DailyQuote';
+
+Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。本站基于 **Astro** 构建，不仅完美支持标准 Markdown，还通过 **MDX** 扩展了强大的交互组件功能。
+
+---
+
+## 一、 概述
+
+Markdown 的核心目标是“易读易写”。通过简单的标记语法，让普通文本具备格式化效果，无需复杂的 HTML 标签。
+
+### 核心特性
+*   **可读性优先**：纯文本格式，无冗余标签，直接阅读也自然流畅。
+*   **语法简洁**：基于标点符号设计，标记与语义高度一致（如 `**强调**` 直观易懂）。
+*   **兼容性强**：支持扩展表格、脚注等功能，可转换为 HTML、PDF、Docbook 等格式。
+*   **灵感来源**：源自纯文本电子邮件格式，兼顾写作效率与展示效果。
+
+---
+
+## 二、 文章配置 (Frontmatter)
+
+在 `src/content/blog/` 目录下的每个文件，都必须包含一段被 `---` 包围的元数据，这决定了文章的展示信息。
+
+### 核心参数说明
+
+| 参数名 | 类型 | 说明 |
+| :--- | :--- | :--- |
+| `title` | String | **文章标题**。展示在列表页和文章正文顶部。 |
+| `description` | String | **描述信息**。用于 SEO 优化和列表页预览摘要。 |
+| `pubDate` | Date | **发布日期**。标准日期格式：`YYYY-MM-DD`。 |
+| `coverImage` | String | **封面图路径**。位于 `public/` 目录下（如 `/cover.png`）。 |
+| `tags` | Array | **标签列表**。用于文章分类，例：`["Anime", "Tech"]`。 |
+
+---
+
+## 三、 实战演示：多媒体与交互 (Live Demo)
+
+本站不仅支持文字，还支持丰富的多媒体和实时交互组件。
+
+### 1. 哔哩哔哩视频 (Bilibili)
+您可以直接拷贝 B 站的嵌入代码。为了保证美观，我们建议给 `iframe` 套上一层样式，使其具备圆角和 16:9 的自适应比例。
+
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=881709425&bvid=BV1bK4y1i7BY&cid=1416669270&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin: 20px 0; border: 2px solid rgba(255,102,153,0.1);"></iframe>
+
+### 2. YouTube 视频
+YouTube 视频同样支持直接嵌入，配置方式与 Bilibili 类似。
+
+<iframe width="100%" height="auto" src="https://www.youtube.com/embed/IX8_U5x-BHc?si=OaTgpu8nW06ppSU4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="aspect-ratio: 16/9; border-radius: 12px; margin: 20px 0;"></iframe>
+
+### 3. 图片展示
+您可以直接通过相对路径引用 `public` 文件夹下的图片。
+
+![场景演示](/车站.jpg)
+
+### 4. 高级 MDX 组件：每日一言
+这是通过 **DailyQuote** React 组件实现的实时功能。它会动态请求灵感 API。
+
+<DailyQuote client:load />
+
+> **如何使用？** 只需在文章顶部 `import` 组件，然后在正文中使用标签 `<DailyQuote client:load />`。
+
+---
+
+## 四、 块元素详解 (Block Elements)
+
+### 1. 标题
+使用 `#` 号表示标题等级：
+```markdown
+# 一级标题
+## 二级标题
+### 三级标题
+```
+
+### 2. 块引用 (Blockquotes)
+用于引用他人的话或特别强调的段落。
+> 这是一个引用块的示例。
+> 可以包含多行文字。
+
+### 3. 列表 (Lists)
+- **无序列表**：使用 `-`、`+` 或 `*`。
+- **有序列表**：使用数字加英文句点 `1. `、`2. `。
+- **任务列表**：使用 `- [ ]` (未完成) 或 `- [x]` (已完成)。
+
+### 4. 表格 (Table)
+| 项目 | 价格 | 数量 |
+| :--- | :---: | ---: |
+| 咖啡 | $15 | 2 |
+| 面包 | $10 | 1 |
+
+---
+
+## 五、 行内元素详解 (Inline Elements)
+
+### 1. 文本样式
+- **加粗**：`**加粗文本**` -> **加粗文本**
+- **斜体**：`*斜体文本*` -> *斜体文本*
+- **删除线**：`~~删除线~~` -> ~~删除线~~
+- **下划线**：可以使用 HTML 标签 `<u>下划线</u>` -> <u>下划线</u>
+
+### 2. 链接与图片
+- **超链接**：`[点击跳转](https://earth.nullschool.net/zh-cn/)`
+- **行内图片**：`![描述文字](/车站.jpg)`
+
+---
+
+## 六、 注意事项
+
+1.  **文件后缀**：如果要使用 React 组件或嵌入视频，请务必使用 **`.mdx`** 后缀。
+2.  **空行原则**：Markdown 的不同块元素之间建议留一个空行，以确保解析正确。
+3.  **转义字符**：如果你想在正文中展示 Markdown 的特殊符号，请使用 `\` 进行转义，如 `\*`。
+
+> 🎨 **结语**：这份指南旨在帮助你快速上手并精通本站的创作系统。每一个组件都是为了让你的表达更具生命力。

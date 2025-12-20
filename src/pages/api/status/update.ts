@@ -15,13 +15,16 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     try {
-        // 2. 获取手机发来的 JSON 数据
+        // 2. 获取数据并添加时间戳
         const body = await request.json();
-        // body 格式期待: { battery: 80, network: "WiFi", location: "Home", device: "Xiaomi 13", ... }
+        const dataToSave = {
+            ...body,
+            lastUpdate: Date.now()
+        };
 
         // 3. 存入 Redis
-        // 设置过期时间为 10 分钟 (600秒)，如果手机很久没发数据，就认为离线
-        await kv.set('my_device_status', body, { ex: 600 });
+        // 将过期时间延长到 24 小时 (86400秒)，以便保留“最后在线”时的设备名和位置
+        await kv.set('my_device_status', dataToSave, { ex: 86400 });
 
         return new Response(JSON.stringify({ success: true }), { status: 200 });
     } catch (error) {

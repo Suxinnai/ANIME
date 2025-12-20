@@ -17,7 +17,19 @@ export const GET: APIRoute = async () => {
         };
 
         // 使用 Redis 数据或默认数据
-        const data = status || fallbackData;
+        let data: any = status || fallbackData;
+
+        // 离线检测：如果数据最后更新时间超过 15 秒，标记为离线
+        if (data.lastUpdate) {
+            const now = Date.now();
+            if (now - data.lastUpdate > 15000) {
+                data.isOffline = true;
+            }
+        } else if (status) {
+            // 如果有数据但没时间戳（旧数据），也暂时不处理，或者默认在线
+        } else {
+            data.isOffline = true; // 没数据肯定是离线
+        }
 
         return new Response(JSON.stringify(data), {
             status: 200,
