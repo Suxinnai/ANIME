@@ -1,0 +1,110 @@
+/*!
+ * Giscus Anime Theme
+ * 仿照博客站点的动漫风格配色
+ */
+
+main {
+  /* 基础配色 - 对应您博客的 --anime-pink */
+  --color-prettylights-syntax-comment: #8b949e;
+  --color-prettylights-syntax-constant: #79c0ff;
+  --color-prettylights-syntax-entity: #d2a8ff;
+  --color-prettylights-syntax-storage-modifier-import: #c9d1d9;
+  --color-prettylights-syntax-entity-tag: #7ee787;
+  --color-prettylights-syntax-keyword: #ff7b72;
+  --color-prettylights-syntax-string: #a5d6ff;
+  --color-prettylights-syntax-variable: #ffa657;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f0f6fc;
+  --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;
+  --color-prettylights-syntax-invalid-illegal-bg: #8b080b;
+  --color-prettylights-syntax-carriage-return-text: #f0f6fc;
+  --color-prettylights-syntax-carriage-return-bg: #b62324;
+  --color-prettylights-syntax-string-regexp: #7ee787;
+  --color-prettylights-syntax-markup-list: #f2cc60;
+  --color-prettylights-syntax-markup-heading: #1f6feb;
+  --color-prettylights-syntax-markup-italic: #c9d1d9;
+  --color-prettylights-syntax-markup-bold: #c9d1d9;
+  --color-prettylights-syntax-markup-deleted-text: #ffdcd7;
+  --color-prettylights-syntax-markup-deleted-bg: #67060c;
+  --color-prettylights-syntax-markup-inserted-text: #aff5b4;
+  --color-prettylights-syntax-markup-inserted-bg: #033a16;
+  --color-prettylights-syntax-markup-changed-text: #ffdfb6;
+  --color-prettylights-syntax-markup-changed-bg: #5a1e02;
+  --color-prettylights-syntax-markup-ignored-text: #c9d1d9;
+  --color-prettylights-syntax-markup-ignored-bg: #1158c7;
+  --color-prettylights-syntax-meta-diff-range: #d2a8ff;
+  --color-prettylights-syntax-brackethighlighter-angle: #8b949e;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
+  --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
+
+  /* 核心变量重写 */
+  --color-btn-text: #ffffff;
+  --color-btn-bg: #ff8fab; /* 按钮背景 - 动漫粉 */
+  --color-btn-border: rgba(255, 255, 255, 0.1);
+  --color-btn-shadow: 0 0 transparent;
+  --color-btn-inset-shadow: 0 0 transparent;
+  --color-btn-hover-bg: #ff769b; /* 按钮悬停 - 深粉 */
+  --color-btn-hover-border: rgba(255, 255, 255, 0.1);
+  --color-btn-selected-bg: #ff769b;
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #ff8fab; /* 主要按钮背景 */
+  --color-btn-primary-border: rgba(255, 255, 255, 0.1);
+  --color-btn-primary-shadow: 0 0 transparent;
+  --color-btn-primary-inset-shadow: 0 0 transparent;
+  --color-btn-primary-hover-bg: #ff769b;
+  --color-btn-primary-hover-border: rgba(255, 255, 255, 0.1);
+  --color-btn-primary-selected-bg: #ff769b;
+  --color-btn-primary-selected-shadow: 0 0 transparent;
+  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.5);
+  --color-btn-primary-disabled-bg: #ffb3c6;
+  --color-btn-primary-disabled-border: rgba(255, 255, 255, 0.1);
+  
+  /* 输入框与背景 */
+  --color-canvas-default: transparent; /* 背景透明 */
+  --color-canvas-overlay: #ffffff;
+  --color-canvas-inset: transparent;
+  --color-border-default: transparent; /* 去掉边框 */
+  --color-border-muted: rgba(127, 127, 127, 0.2);
+  --color-neutral-muted: rgba(127, 127, 127, 0.1);
+  --color-accent-fg: #ff8fab; /* 链接颜色 */
+  --color-accent-emphasis: #ff8fab;
+  --color-accent-muted: rgba(255, 143, 171, 0.4);
+  --color-accent-subtle: rgba(255, 143, 171, 0.1);
+
+  /* 字体和文字 */
+  --color-fg-default: #2b2d42;
+  --color-fg-muted: #6e7082;
+  --color-fg-subtle: #8b949e;
+  --color-canvas-default-transparent: rgba(255, 255, 255, 0);
+
+  /* 输入框特定样式 */
+  --color-input-bg: rgba(255, 255, 255, 0.5);
+  --color-input-contrast-bg: rgba(255, 255, 255, 0.8);
+  --color-input-border: rgba(0, 0, 0, 0.1);
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  main {
+    --color-fg-default: #f0f6fc;
+    --color-fg-muted: #8b949e;
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-input-contrast-bg: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* 额外的 CSS 注入 - 让输入框变得圆润 */
+.gsc-comment-box {
+  background-color: transparent;
+  border: 1px dashed var(--color-border-muted);
+  border-radius: 1rem;
+}
+
+.gsc-comment-box-textarea {
+  background-color: var(--color-input-bg);
+  border-radius: 0.5rem;
+}
+
+button.gsc-social-reaction-summary-item {
+  border-radius: 99px;
+  border: 1px solid var(--color-border-muted);
+}
