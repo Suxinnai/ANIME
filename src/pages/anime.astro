@@ -25,7 +25,7 @@ const animeList = [
         year: "2023",
         genre: ["奇幻", "治愈"],
         studio: "Madhouse",
-        link: "https://www.bilibili.com/bangumi/media/md28235284",
+        link: "https://www.bilibili.com/bangumi/play/ep779775?spm_id_from=333.337.0.0&from_spmid=666.25.episode.0",
         progress: 16,
         totalEpisodes: 28,
     },
@@ -231,6 +231,19 @@ const stats = {
                     >
                         <Star className="w-4 h-4 fill-current" />
                         {stats.avgRating}
+                    </div>
+                </div>
+                <div
+                    class="px-4 py-2 bg-white/80 dark:bg-white/5 rounded-xl border border-anime-dark/10 shadow-sm flex flex-col items-center min-w-[80px]"
+                >
+                    <span class="text-xs font-bold text-gray-400 uppercase"
+                        >Watching</span
+                    >
+                    <div
+                        class="flex items-center gap-1 text-green-500 font-black text-lg"
+                    >
+                        <Play className="w-4 h-4 fill-current" />
+                        {stats.watching}
                     </div>
                 </div>
                 <div
