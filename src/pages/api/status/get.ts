@@ -22,7 +22,7 @@ export const GET: APIRoute = async () => {
         // 离线检测：如果数据最后更新时间超过 15 秒，标记为离线
         if (data.lastUpdate) {
             const now = Date.now();
-            if (now - data.lastUpdate > 15000) {
+            if (now - data.lastUpdate > 45000) {
                 data.isOffline = true;
             }
         } else if (status) {

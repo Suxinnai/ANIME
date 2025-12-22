@@ -271,18 +271,35 @@ def sync_loop():
                     music_context = song_title
                 print(f"[Media API] Detected: {music_context}")
 
-            # 3. AI 生成 (减少频率，只有状态根本改变时才生成)
+            # 3. AI 生成 (非阻塞模式)
             # AI 的上下文：如果有音乐，用音乐生成心情；否则用当前应用
             ai_context_key = music_context if is_music_mode else app_display_name
             
-            # 只有当状态改变，或者每隔 5 分钟 (100次循环) 重新生成一次以保持新鲜感
+            # 只有当状态改变，才触发 AI 生成
             if ai_context_key != last_context:
-                print(f"State changed to: {ai_context_key}, asking AI...")
-                ai_mood = generate_ai_status(ai_context_key, is_music_mode)
+                print(f"State changed to: {ai_context_key}, asking AI (Async)...")
+                
+                # 定义线程工作函数
+                def ai_worker_thread(context, is_music):
+                    nonlocal last_ai_text
+                    # 在等待 AI 时，可以保留上一条心情，或者暂不更新
+                    try:
+                        new_mood = generate_ai_status(context, is_music)
+                        if new_mood:
+                            last_ai_text = new_mood
+                            print(f"[AI] Mood updated: {new_mood}")
+                    except Exception as e:
+                        print(f"[AI] Thread Error: {e}")
+
+                # 启动后台线程
+                import threading
+                t = threading.Thread(target=ai_worker_thread, args=(ai_context_key, is_music_mode))
+                t.daemon = True
+                t.start()
+                
                 last_context = ai_context_key
-                last_ai_text = ai_mood
             
-            # 4. 发送数据
+            # 4. 发送数据 (AI 线程会在后台运行，不会阻塞这里的心跳发送)
             # 逻辑分离：
             # app: 始终显示前台窗口 (灵动岛用)
             # track: 音乐信息 (右下角用)
