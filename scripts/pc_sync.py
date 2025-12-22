@@ -22,13 +22,28 @@ except ImportError:
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# ================= 配置区 =================
-API_URL = "https://anime.suxinnai.online/api/status/update"
-SECRET = "sxn_8f3c1a9d2e6b4c7f90a1d3e5b7c9f1a2"
+# ================= 配置加载 =================
+def load_dotenv(path):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    key, value = line.split("=", 1)
+                    os.environ[key] = value
+
+# 加载 .env 文件 (项目根目录下的 .env)
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+
+API_URL = os.getenv("STATUS_API_URL", "https://anime.suxinnai.online/api/status/update")
+SECRET = os.getenv("STATUS_SECRET", "")
 
 # AI 配置
-AI_API_KEY = "sk-solroao8wo7exh5wgx9z2x6ayyz0enrznogpkvqt4jzhftig"
-AI_BASE_URL = "https://api.xiaomimimo.com/v1"
+AI_API_KEY = os.getenv("AI_API_KEY", "")
+AI_BASE_URL = os.getenv("AI_BASE_URL", "https://api.xiaomimimo.com/v1")
+
+if not AI_API_KEY or not SECRET:
+    print("[Warning] Missing API_KEY or SECRET in .env file!")
 
 client = OpenAI(
     api_key=AI_API_KEY,
