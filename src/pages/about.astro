@@ -95,7 +95,7 @@ const equipment = [
 
                         <!-- Avatar Image -->
                         <img
-                            src="/mascot.jpg"
+                            src="/Suxinnai.jpg"
                             alt="Avatar"
                             class="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-cover rounded-full border-4 border-anime-dark dark:border-white/20 shadow-inner"
                         />
@@ -151,12 +151,12 @@ const equipment = [
                                 class="flex-grow h-4 bg-gray-200 dark:bg-white/10 rounded-full border border-anime-dark dark:border-white/20 overflow-hidden relative"
                             >
                                 <div
-                                    class="absolute top-0 left-0 h-full bg-blue-400 w-[95%] shadow-[0_0_10px_rgba(96,165,250,0.5)]"
+                                    class="absolute top-0 left-0 h-full bg-blue-400 w-[75%] shadow-[0_0_10px_rgba(96,165,250,0.5)]"
                                 >
                                 </div>
                                 <span
                                     class="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-white drop-shadow-md"
-                                    >9999 / 9999</span
+                                    >7500 / 9999</span
                                 >
                             </div>
                         </div>
@@ -238,173 +238,290 @@ const equipment = [
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- Custom Radar Chart -->
+                        <!-- Custom Radar Chart (Enhanced) -->
                         <div
-                            class="flex flex-col items-center justify-center bg-white dark:bg-white/5 border border-anime-dark/20 dark:border-white/10 rounded-2xl p-4"
+                            class="relative flex flex-col items-center justify-between bg-white dark:bg-white/5 border border-anime-dark/20 dark:border-white/10 rounded-2xl p-5 overflow-hidden group min-h-[320px]"
                         >
-                            <h3
-                                class="font-display font-bold text-sm mb-4 text-anime-dark dark:text-white flex items-center gap-2"
+                            <!-- Background Decoration -->
+                            <div
+                                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-anime-pink via-anime-yellow to-anime-blue"
                             >
-                                <Zap className="w-4 h-4 text-anime-yellow" /> 基础属性
-                            </h3>
+                            </div>
+                            <div
+                                class="absolute -right-10 -top-10 w-32 h-32 bg-anime-yellow/10 rounded-full blur-2xl"
+                            >
+                            </div>
+
+                            <!-- Header -->
+                            <div
+                                class="w-full flex justify-between items-center mb-2 z-10"
+                            >
+                                <h3
+                                    class="font-display font-bold text-sm text-anime-dark dark:text-white flex items-center gap-2"
+                                >
+                                    <Zap
+                                        className="w-4 h-4 text-anime-yellow"
+                                    />
+                                    基础属性
+                                </h3>
+                                <span
+                                    class="text-[10px] font-black text-anime-dark/30 dark:text-white/30 tracking-widest"
+                                    >STATUS</span
+                                >
+                            </div>
+
+                            <!-- Rank Badge -->
+                            <div
+                                class="absolute top-12 right-6 rotate-12 bg-anime-pink/10 border-2 border-anime-pink text-anime-pink font-black text-2xl px-2 py-1 rounded-lg opacity-80"
+                            >
+                                B+
+                            </div>
+
                             <!-- SVG Radar Chart -->
-                            <svg
-                                viewBox="0 0 200 200"
-                                class="w-48 h-48 overflow-visible"
-                            >
-                                <polygon
-                                    points="100,20 170,60 170,140 100,180 30,140 30,60"
-                                    fill="none"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></polygon>
-                                <polygon
-                                    points="100,40 152,70 152,130 100,160 48,130 48,70"
-                                    fill="none"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10 opacity-50"
-                                ></polygon>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="100"
-                                    y2="20"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="170"
-                                    y2="60"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="170"
-                                    y2="140"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="100"
-                                    y2="180"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="30"
-                                    y2="140"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
-                                <line
-                                    x1="100"
-                                    y1="100"
-                                    x2="30"
-                                    y2="60"
-                                    stroke="#e5e7eb"
-                                    stroke-width="1"
-                                    class="dark:stroke-white/10"></line>
+                            <div class="relative z-10 my-2">
+                                <svg
+                                    viewBox="0 0 200 200"
+                                    class="w-40 h-40 overflow-visible filter drop-shadow-sm"
+                                >
+                                    <polygon
+                                        points="100,20 170,60 170,140 100,180 30,140 30,60"
+                                        fill="none"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></polygon>
+                                    <polygon
+                                        points="100,40 152,70 152,130 100,160 48,130 48,70"
+                                        fill="none"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10 opacity-50"
+                                    ></polygon>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="100"
+                                        y2="20"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="170"
+                                        y2="60"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="170"
+                                        y2="140"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="100"
+                                        y2="180"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="30"
+                                        y2="140"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
+                                    <line
+                                        x1="100"
+                                        y1="100"
+                                        x2="30"
+                                        y2="60"
+                                        stroke="#e5e7eb"
+                                        stroke-width="1"
+                                        class="dark:stroke-white/10"></line>
 
-                                <polygon
-                                    points="100,35 155,70 160,135 100,150 40,132 38,68"
-                                    fill="rgba(255, 143, 171, 0.4)"
-                                    stroke="#FF8FAB"
-                                    stroke-width="2"
-                                    class="animate-pulse"></polygon>
+                                    <!-- Data Polygon -->
+                                    <polygon
+                                        points="100,55 135,85 160,135 100,145 40,132 38,68"
+                                        fill="rgba(255, 143, 171, 0.4)"
+                                        stroke="#FF8FAB"
+                                        stroke-width="2"
+                                        class="animate-[pulse_3s_ease-in-out_infinite]"
+                                    ></polygon>
 
-                                <text
-                                    x="100"
-                                    y="15"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >力量</text
+                                    <!-- Labels -->
+                                    <text
+                                        x="100"
+                                        y="15"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >力量</text
+                                    >
+                                    <text
+                                        x="180"
+                                        y="60"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >智力</text
+                                    >
+                                    <text
+                                        x="180"
+                                        y="145"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >敏捷</text
+                                    >
+                                    <text
+                                        x="100"
+                                        y="195"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >幸运</text
+                                    >
+                                    <text
+                                        x="20"
+                                        y="145"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >耐力</text
+                                    >
+                                    <text
+                                        x="20"
+                                        y="60"
+                                        text-anchor="middle"
+                                        font-size="10"
+                                        font-weight="bold"
+                                        fill="currentColor"
+                                        class="text-anime-dark dark:text-gray-300"
+                                        >精神</text
+                                    >
+                                </svg>
+                            </div>
+
+                            <!-- Detail Stats Grid -->
+                            <div class="w-full grid grid-cols-3 gap-2 mt-4">
+                                <div
+                                    class="bg-gray-50 dark:bg-white/5 rounded-lg p-2 text-center"
                                 >
-                                <text
-                                    x="180"
-                                    y="60"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >智力</text
+                                    <div
+                                        class="text-[9px] text-gray-400 uppercase tracking-wider"
+                                    >
+                                        智力
+                                    </div>
+                                    <div
+                                        class="text-sm font-bold text-anime-blue"
+                                    >
+                                        B
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-gray-50 dark:bg-white/5 rounded-lg p-2 text-center"
                                 >
-                                <text
-                                    x="180"
-                                    y="145"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >敏捷</text
+                                    <div
+                                        class="text-[9px] text-gray-400 uppercase tracking-wider"
+                                    >
+                                        敏捷
+                                    </div>
+                                    <div
+                                        class="text-sm font-bold text-anime-pink"
+                                    >
+                                        A
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-gray-50 dark:bg-white/5 rounded-lg p-2 text-center"
                                 >
-                                <text
-                                    x="100"
-                                    y="195"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >幸运</text
-                                >
-                                <text
-                                    x="20"
-                                    y="145"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >耐力</text
-                                >
-                                <text
-                                    x="20"
-                                    y="60"
-                                    text-anchor="middle"
-                                    font-size="10"
-                                    font-weight="bold"
-                                    fill="currentColor"
-                                    class="text-anime-dark dark:text-gray-300"
-                                    >精神</text
-                                >
-                            </svg>
+                                    <div
+                                        class="text-[9px] text-gray-400 uppercase tracking-wider"
+                                    >
+                                        幸运
+                                    </div>
+                                    <div
+                                        class="text-sm font-bold text-anime-yellow"
+                                    >
+                                        B+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Current Quest / Active Skills / Tools -->
                         <div class="flex flex-col gap-6">
                             <!-- Current Quest -->
+                            <!-- Current Quest (Redesigned) -->
                             <div
-                                class="bg-blue-50 dark:bg-blue-900/20 p-4 border-l-4 border-anime-blue rounded-r-lg"
+                                class="relative bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-[#1e1e1e] p-5 rounded-xl border border-blue-100 dark:border-blue-500/30 shadow-sm group overflow-hidden"
                             >
-                                <h3
-                                    class="font-bold text-xs uppercase tracking-wider text-anime-blue mb-1"
+                                <!-- Background Decoration -->
+                                <div
+                                    class="absolute -bottom-2 -right-2 opacity-10 transform rotate-12"
                                 >
-                                    当前任务
-                                </h3>
-                                <p
-                                    class="font-bold text-anime-dark dark:text-white"
-                                >
-                                    校园论坛毕设
-                                </p>
-                                <p
-                                    class="text-xs text-anime-dark/60 dark:text-gray-400 mt-1"
-                                >
-                                    进度: 50% (Coding...)
-                                </p>
+                                    <Zap
+                                        className="w-16 h-16 text-anime-blue"
+                                    />
+                                </div>
+
+                                <div class="relative z-10">
+                                    <h3
+                                        class="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-anime-blue mb-2"
+                                    >
+                                        <span
+                                            class="w-1.5 h-1.5 rounded-full bg-anime-blue animate-pulse"
+                                        ></span>
+                                        当前任务 (QUEST)
+                                    </h3>
+                                    <p
+                                        class="text-lg font-bold text-anime-dark dark:text-white mb-3"
+                                    >
+                                        校园论坛毕设开发
+                                    </p>
+
+                                    <!-- Progress Bar -->
+                                    <div
+                                        class="w-full bg-gray-200 dark:bg-black/40 h-2.5 rounded-full overflow-hidden mb-2"
+                                    >
+                                        <div
+                                            class="h-full bg-anime-blue rounded-full relative w-[50%] animate-[loading 1s ease-out]"
+                                        >
+                                            <div
+                                                class="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"
+                                            >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center text-xs"
+                                    >
+                                        <span
+                                            class="text-anime-dark/60 dark:text-gray-400 font-mono"
+                                            >Progress: 50%</span
+                                        >
+                                        <span
+                                            class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded text-[10px] font-bold"
+                                            >CODING...</span
+                                        >
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Active Skills -->
