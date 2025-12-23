@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { BookOpen, Layers } from "lucide-react";
+
+// Get all posts
+const allPosts = await getCollection("blog");
+
+// Extract unique series and count posts
+const seriesMap = new Map();
+
+allPosts.forEach((post) => {
+    if (post.data.series) {
+        if (!seriesMap.has(post.data.series)) {
+            seriesMap.set(post.data.series, {
+                name: post.data.series,
+                count: 0,
+                lastUpdated: post.data.pubDate,
+                cover: post.data.coverImage
+            });
+        }
+        const seriesData = seriesMap.get(post.data.series);
+        seriesData.count += 1;
+        if (post.data.pubDate > seriesData.lastUpdated) {
+            seriesData.lastUpdated = post.data.pubDate;
+            seriesData.cover = post.data.coverImage; // Use the latest post's cover as series cover
+        }
+    }
+});
+
+const seriesList = Array.from(seriesMap.values());
+---
+
+<BaseLayout title="专栏系列 | Series" description="系统化的知识体系与专题连载。">
+    <section class="container-custom py-20">
+        <!-- Header -->
+        <div class="max-w-3xl mb-16">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-6 flex items-center gap-4">
+                <Layers className="w-10 h-10 text-anime-pink" />
+                专栏系列
+            </h1>
+            <p class="text-xl text-anime-dark/60 dark:text-gray-400 leading-relaxed">
+                成体系的知识输出，按专题组织的深度内容。
+            </p>
+        </div>
+
+        <!-- Series Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {seriesList.length > 0 ? (
+                seriesList.map((series) => (
+                    <a href={`/series/${series.name}`} class="group block relative">
+                        <div class="bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/10 rounded-3xl overflow-hidden shadow-comic hover:shadow-comic-lg hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+                            <!-- Cover Image -->
+                            <div class="aspect-video w-full overflow-hidden relative border-b-2 border-anime-dark dark:border-white/10">
+                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+                                <img 
+                                    src={series.cover} 
+                                    alt={series.name}
+                                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                />
+                                <!-- Badge -->
+                                <div class="absolute top-4 right-4 z-20 bg-anime-pink text-white text-xs font-bold px-3 py-1 rounded-full border border-anime-dark shadow-sm">
+                                    {series.count} 篇文章
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="p-6 flex-grow flex flex-col relative z-20 bg-white dark:bg-[#1e1e1e]">
+                                <h3 class="text-2xl font-display font-bold text-anime-dark dark:text-white mb-2 group-hover:text-anime-blue transition-colors">
+                                    {series.name}
+                                </h3>
+                                <div class="mt-auto pt-4 flex items-center text-sm text-gray-500 dark:text-gray-400 gap-2">
+                                    <BookOpen className="w-4 h-4" />
+                                    <span>最近更新: {series.lastUpdated.toLocaleDateString('zh-CN')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                ))
+            ) : (
+                <div class="col-span-full text-center py-20 bg-gray-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-gray-300 dark:border-white/10">
+                    <p class="text-xl text-gray-400 font-bold">暂无专栏内容</p>
+                    <p class="text-sm text-gray-400 mt-2">请在文章 Frontmatter 中添加 series 字段</p>
+                </div>
+            )}
+        </div>
+    </section>
+</BaseLayout>

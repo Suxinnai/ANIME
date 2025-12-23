@@ -1,0 +1,127 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getCollection } from "astro:content";
+import { ArrowLeft, Layers, SortAsc } from "lucide-react";
+
+// In server mode, we fetch data dynamically based on the URL parameter
+const { series } = Astro.params;
+
+// Decode the series name from URL (handles both encoded and plain Chinese)
+const decodedSeries = series ? decodeURIComponent(series) : "";
+
+// Get all posts and filter by series
+const allPosts = await getCollection("blog");
+const posts = allPosts.filter((post) => post.data.series === decodedSeries);
+
+// Redirect if no posts found for this series
+if (!posts || posts.length === 0) {
+    return Astro.redirect("/404");
+}
+
+// Sort posts: 
+// 1. By seriesOrder (ascending)
+// 2. By pubDate (ascending) - usually series are read order
+const sortedPosts = [...posts].sort((a, b) => {
+    // If both have order, use it
+    if (a.data.seriesOrder !== undefined && b.data.seriesOrder !== undefined) {
+        return a.data.seriesOrder - b.data.seriesOrder;
+    }
+    // If only one has order, it comes first (or we could enforce it always comes first)
+    // Actually, mixing ordered and unordered is tricky. Let's assume order prevails.
+    if (a.data.seriesOrder !== undefined) return -1;
+    if (b.data.seriesOrder !== undefined) return 1;
+
+    // Fallback to date (oldest first for tutorials usually?)
+    // User didn't specify, but tutorials usually imply "Part 1, Part 2..." which is chronological.
+    return a.data.pubDate.valueOf() - b.data.pubDate.valueOf();
+});
+
+---
+
+<BaseLayout title={`${decodedSeries} | 专栏`} description={`专栏 ${decodedSeries} 的所有文章`}>
+    <!-- Minimal Compact Header -->
+    <section class="relative pt-8 pb-8 bg-white dark:bg-[#1a1a1a] border-b border-gray-100 dark:border-white/5 shadow-sm z-20">
+        <div class="container-custom flex flex-col md:flex-row items-center justify-between gap-6">
+            <!-- Left: Back + Title + Icon -->
+            <div class="flex items-center gap-6 w-full md:w-auto">
+                <a
+                    href="/series"
+                    class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-500 hover:text-white hover:bg-anime-pink transition-all group"
+                    title="返回专栏列表"
+                >
+                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                </a>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-anime-pink to-anime-pink/80 rounded-xl flex items-center justify-center text-white shadow-md">
+                        <Layers className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-display font-bold text-anime-dark dark:text-white leading-tight">
+                            {decodedSeries}
+                        </h1>
+                        <div class="text-xs text-gray-400 mt-1 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-anime-blue animate-pulse"></span>
+                            共 {posts.length} 篇文章
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Simple Stats (Optional/Hidden on mobile if too crowded) -->
+            <div class="hidden md:flex items-center gap-4 text-sm text-gray-400">
+                 <div class="px-4 py-1.5 bg-gray-50 dark:bg-white/5 rounded-full border border-gray-100 dark:border-white/5">
+                    Updated: {posts.length > 0 ? sortedPosts[sortedPosts.length - 1].data.pubDate.toLocaleDateString('zh-CN') : 'N/A'}
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="container-custom py-12">
+        <!-- Timeline Section -->
+        <div class="relative max-w-5xl mx-auto">
+            <!-- Gradient Center Line -->
+            <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-anime-pink via-anime-blue to-transparent -translate-x-1/2 hidden md:block rounded-full opacity-20"></div>
+
+            <div class="space-y-16 pb-20">
+                {sortedPosts.map((post, index) => (
+                    <div class={`relative flex flex-col md:flex-row gap-12 md:gap-20 items-center ${index % 2 === 0 ? 'md:flex-row-reverse' : ''} group`}>
+                        
+                        <!-- Timeline Node (Desktop) -->
+                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white dark:bg-[#1e1e1e] border-2 border-anime-pink z-10 hidden md:flex items-center justify-center shadow-md transform transition-all duration-300 group-hover:scale-125 group-hover:bg-anime-pink group-hover:border-white">
+                             <span class="text-xs font-bold text-anime-pink font-mono group-hover:text-white transition-colors">{post.data.seriesOrder ?? index + 1}</span>
+                        </div>
+
+                        <!-- Card Container -->
+                        <div class="w-full md:w-[calc(50%-5rem)] perspective-1000">
+                             <div class="transform transition-all duration-500 hover:-translate-y-2">
+                                <BlogCard post={post} />
+                             </div>
+                        </div>
+                        
+                        <!-- Opposing Side: Artistic Typography -->
+                        <div class="hidden md:flex w-[calc(50%-5rem)] items-center justify-center select-none pointer-events-none">
+                             <div class={`relative ${index % 2 === 0 ? 'text-left' : 'text-right'} opacity-40 transition-opacity duration-500 group-hover:opacity-100`}>
+                                 <!-- Foreground Typography (Scaled down slightly) -->
+                                 <div class="relative z-10">
+                                     <div class="text-xs font-bold tracking-[0.3em] text-anime-pink/60 uppercase mb-2">Chapter</div>
+                                     <div class="text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-br from-anime-dark to-anime-dark/30 dark:from-white dark:to-white/20 italic">
+                                         {String(post.data.seriesOrder ?? index + 1).padStart(2, '0')}
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <!-- To Be Continued Endpoint -->
+            <div class="flex flex-col items-center justify-center pt-8 text-anime-dark/20 dark:text-white/10 gap-3">
+                <div class="w-1 h-12 bg-gradient-to-b from-anime-blue/20 to-transparent"></div>
+                <div class="font-display font-bold tracking-[0.2em] text-xs uppercase italic">End of List</div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
