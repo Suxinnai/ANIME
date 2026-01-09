@@ -3,7 +3,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogCard from "../components/BlogCard.astro";
 import DigitalTwin from "../components/DigitalTwinReact.jsx"; // Use React version
 import { getCollection } from "astro:content";
-import { ArrowRight, Sparkles, Gamepad2 } from "lucide-react";
+import { ArrowRight, Sparkles, Gamepad2, Trophy } from "lucide-react";
+import { getActiveRoadmap } from "../data/roadmaps/index";
+
+const roadmapData = getActiveRoadmap();
+
+// Calculate progress for homepage widget
+let totalItems = 0;
+let completedItems = 0;
+roadmapData.sections.forEach((section) => {
+    section.items.forEach((item) => {
+        totalItems++;
+        if (item.completed) completedItems++;
+        if (item.children) {
+            item.children.forEach((child) => {
+                totalItems++;
+                if (child.completed) completedItems++;
+            });
+        }
+    });
+});
+const progressPercent = Math.round((completedItems / totalItems) * 100);
 
 // Get latest 3 posts
 const posts = (await getCollection("blog"))
@@ -85,21 +105,21 @@ const posts = (await getCollection("blog"))
                     >攻略。
                 </p>
 
-                <!-- System Notice (Retro Style) -->
+                <!-- System Notice (Typewriter Style) -->
                 <div
-                    class="w-full max-w-md bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-3 flex items-center gap-3 overflow-hidden"
+                    class="w-full max-w-md bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-3 flex items-center gap-3 overflow-hidden group hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
                 >
                     <div
                         class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full animate-pulse"
                     >
                     </div>
-                    <span
-                        class="text-xs font-mono text-anime-dark/60 dark:text-gray-400 whitespace-nowrap animate-marquee"
-                    >
-                        [系统公告] 欢迎来到 Suxinnai
-                        的数字异世界！追番记录模块已上线，快去康康吧 ~
-                        留言板现已开启，欢迎留下你的冒险足迹 🐾
-                    </span>
+                    <div class="flex-grow overflow-hidden relative h-5">
+                        <span
+                            class="block text-xs font-mono text-anime-dark/70 dark:text-gray-300 whitespace-nowrap overflow-hidden border-r-2 border-anime-dark/50 animate-typing"
+                        >
+                            [System] User connected. Adventure awaits!
+                        </span>
+                    </div>
                 </div>
 
                 <div class="flex flex-wrap gap-4 pt-4">
@@ -139,6 +159,139 @@ const posts = (await getCollection("blog"))
                 </div>
             </div>
         </div>
+
+        <!-- Wave Divider -->
+        <div
+            class="absolute bottom-0 left-0 w-full leading-[0] z-10 text-white dark:text-[#121212]"
+        >
+            <svg
+                data-name="Layer 1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1200 120"
+                preserveAspectRatio="none"
+                class="relative block h-[60px] w-full fill-current"
+            >
+                <path
+                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                ></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Learning Path Section -->
+    <section
+        class="py-16 pt-24 bg-white dark:bg-[#121212] relative overflow-hidden"
+    >
+        <div class="container-custom">
+            <div
+                class="card-comic p-8 md:p-10 bg-white/40 dark:bg-white/5 backdrop-blur-md border-dashed border-2 border-anime-blue/20 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 relative z-10 overflow-hidden group hover:border-anime-blue/40 transition-colors duration-500"
+            >
+                <!-- Radiant Background behind card -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-anime-blue/5 via-transparent to-anime-pink/5 opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+                >
+                </div>
+
+                <div
+                    class="space-y-4 text-center md:text-left relative z-10 max-w-xl"
+                >
+                    <h2
+                        class="text-3xl md:text-4xl font-display text-anime-dark dark:text-white flex items-center justify-center md:justify-start gap-3"
+                    >
+                        <span
+                            class="w-10 h-10 bg-anime-yellow rounded-xl flex items-center justify-center text-anime-dark shadow-sm rotate-3 group-hover:rotate-12 transition-transform duration-300"
+                        >
+                            <Sparkles className="w-6 h-6" />
+                        </span>
+                        当前修炼路线
+                    </h2>
+                    <p
+                        class="text-lg text-anime-dark/70 dark:text-gray-300 italic font-medium leading-relaxed"
+                    >
+                        <span class="text-anime-pink font-bold"
+                            >" {roadmapData.title} "</span
+                        >
+                        <br />
+                        <span class="text-sm opacity-80"
+                            >正在攻克主线任务，向着成为 Legend 进发！</span
+                        >
+                    </p>
+                </div>
+
+                <div
+                    class="w-full md:w-auto flex-grow max-w-sm ml-auto relative z-10"
+                >
+                    <div
+                        class="bg-white/50 dark:bg-black/20 rounded-2xl p-6 border border-white/50 dark:border-white/5 shadow-sm"
+                    >
+                        <div class="flex justify-between items-end mb-3">
+                            <span
+                                class="font-display text-anime-blue text-sm tracking-widest font-bold"
+                                >EXP GAINED</span
+                            >
+                            <div class="flex items-baseline gap-1">
+                                <span
+                                    class="font-display text-3xl text-anime-dark dark:text-white"
+                                    >{progressPercent}</span
+                                >
+                                <span class="text-xs font-bold text-anime-pink"
+                                    >%</span
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Animated Progress Bar -->
+                        <div
+                            class="h-4 bg-gray-100 dark:bg-white/10 rounded-full overflow-hidden p-0.5"
+                        >
+                            <div
+                                class="h-full rounded-full bg-gradient-to-r from-anime-blue to-anime-pink relative overflow-hidden"
+                                style={`width: ${progressPercent}%`}
+                            >
+                                <div
+                                    class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9InN0cmlwZXMiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMNDAgMEgwTDQwIDQwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjgiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdHJpcGVzKSIvPjwvc3ZnPg==')] animate-[slide_1s_linear_infinite]"
+                                >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex justify-between items-center">
+                            <span
+                                class="text-xs font-bold text-gray-400 uppercase"
+                                >{completedItems} / {totalItems} TASKS</span
+                            >
+                            <a
+                                href={`/learning/${roadmapData.id}`}
+                                class="text-xs font-bold text-anime-blue hover:text-anime-pink transition-colors flex items-center gap-1"
+                            >
+                                CONTINUE <ArrowRight className="w-3 h-3" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 背景装饰 (Enhanced) -->
+        <div
+            class="absolute top-1/2 left-0 w-80 h-80 bg-anime-blue/10 rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/2 pointer-events-none"
+        >
+        </div>
+        <div
+            class="absolute top-1/2 right-0 w-80 h-80 bg-anime-pink/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"
+        >
+        </div>
+
+        <style>
+            @keyframes slide {
+                from {
+                    background-position: 0 0;
+                }
+                to {
+                    background-position: 40px 0;
+                }
+            }
+        </style>
     </section>
 
     <!-- Latest Posts Section -->
@@ -187,16 +340,35 @@ const posts = (await getCollection("blog"))
 </BaseLayout>
 
 <style>
-    @keyframes marquee {
-        0% {
-            transform: translateX(100%);
+    @keyframes typing {
+        from {
+            width: 0;
         }
-        100% {
-            transform: translateX(-100%);
+        to {
+            width: 100%;
         }
     }
-    .animate-marquee {
-        display: inline-block;
-        animation: marquee 15s linear infinite;
+    .animate-typing {
+        width: 0;
+        animation: typing 3s steps(40, end) forwards;
+        animation-delay: 0.5s;
+        width: 100%; /* Fallback */
+    }
+
+    @keyframes scroll-down {
+        0% {
+            opacity: 0;
+            transform: translateY(0);
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+    }
+    .animate-scroll-down {
+        animation: scroll-down 1.5s infinite;
     }
 </style>

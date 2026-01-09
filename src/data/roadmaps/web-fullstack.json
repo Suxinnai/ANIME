@@ -1,0 +1,38 @@
+{
+    "id": "web-fullstack",
+    "isActive": false,
+    "title": "Web 全栈开发精进路线",
+    "description": "Vue3 / Astro / Node.js 现代 Web 开发实战",
+    "sections": [
+        {
+            "title": "第一阶段：Vue 3 深度掌握",
+            "items": [
+                {
+                    "id": "web-1",
+                    "text": "Composition API 最佳实践",
+                    "completed": false
+                },
+                {
+                    "id": "web-2",
+                    "text": "Pinia 状态管理模式",
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "第二阶段：Astro 静态站点构建",
+            "items": [
+                {
+                    "id": "web-3",
+                    "text": "Island Architecture 理解与应用",
+                    "completed": false
+                },
+                {
+                    "id": "web-4",
+                    "text": "Content Collections 数据层设计",
+                    "completed": false
+                }
+            ]
+        }
+    ]
+}

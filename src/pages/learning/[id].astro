@@ -1,0 +1,194 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { roadmaps, getRoadmapById } from "../../data/roadmaps/index";
+import { Check, Circle, Trophy, Star, ArrowDown } from "lucide-react";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const roadmapData = getRoadmapById(id || "");
+
+if (!roadmapData) {
+    return Astro.redirect("/404");
+}
+
+const sections = roadmapData.sections;
+
+// Calculate progress
+let totalItems = 0;
+let completedItems = 0;
+
+sections.forEach((section) => {
+    section.items.forEach((item) => {
+        totalItems++;
+        if (item.completed) completedItems++;
+        if (item.children) {
+            item.children.forEach((child) => {
+                totalItems++;
+                if (child.completed) completedItems++;
+            });
+        }
+    });
+});
+
+const progressPercent = Math.round((completedItems / totalItems) * 100);
+
+// Helmet/SEO meta
+const title = `${roadmapData.title} | 学习进度 | Anime Log`;
+const description = roadmapData.description;
+---
+
+<BaseLayout title={title} description={description}>
+    <div class="container-custom max-w-3xl animate-fade-in-up py-12">
+        
+        <!-- Header / Status Board -->
+        <header class="mb-16 text-center">
+            <h1 class="text-3xl md:text-4xl font-display text-anime-dark mb-4 tracking-tight">
+                {roadmapData.title}
+            </h1>
+            <p class="text-anime-dark/60 font-medium mb-8">
+                {roadmapData.description}
+            </p>
+
+            <!-- Compact Progress Bar -->
+            <div class="bg-white rounded-2xl p-6 border-2 border-anime-dark/10 shadow-comic-sm relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-anime-blue/10 p-3 rounded-full text-anime-blue">
+                             <Trophy size={24} />
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-anime-dark text-lg">当前等级</div>
+                            <div class="text-xs text-anime-dark/50 font-bold uppercase tracking-wider">
+                                {progressPercent < 100 ? 'Level In Progress' : 'Max Level Reached'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow w-full md:w-auto md:max-w-xs">
+                        <div class="flex justify-between text-xs font-bold text-anime-dark/60 mb-1">
+                            <span>EXP</span>
+                            <span>{progressPercent}%</span>
+                        </div>
+                        <div class="h-3 bg-gray-100 rounded-full overflow-hidden border border-anime-dark/5">
+                            <div class="h-full bg-anime-blue rounded-full transition-all duration-1000" style={`width: ${progressPercent}%`}></div>
+                        </div>
+                    </div>
+
+                    <div class="text-right hidden md:block">
+                        <div class="font-display text-2xl text-anime-dark">{completedItems} <span class="text-sm text-anime-dark/30">/ {totalItems}</span></div>
+                        <div class="text-xs text-anime-dark/40 font-bold uppercase">Tasks Done</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Vertical Timeline (Left Aligned) -->
+        <div class="relative pl-4 md:pl-8">
+            <!-- Timeline Line -->
+            <div class="absolute left-[27px] md:left-[43px] top-4 bottom-0 w-0.5 bg-gray-200 -z-10"></div>
+
+            <div class="space-y-12">
+                {sections.map((section, index) => (
+                    <article class="relative flex gap-6 md:gap-8 group">
+                        
+                        <!-- Timeline Node -->
+                        <div class="flex-shrink-0 mt-1">
+                            <div class={`
+                                w-8 h-8 md:w-10 md:h-10 rounded-full border-4 border-white shadow-sm flex items-center justify-center font-display text-sm md:text-base z-10 transition-colors
+                                ${section.items.every(i => i.completed) 
+                                    ? 'bg-anime-blue text-white ring-2 ring-anime-blue/20' 
+                                    : 'bg-gray-100 text-gray-400 ring-2 ring-gray-100'
+                                }
+                            `}>
+                                {index}
+                            </div>
+                        </div>
+
+                        <!-- Content Card -->
+                        <div class="flex-grow min-w-0">
+                            <div class={`
+                                bg-white rounded-2xl p-6 border-2 transition-all duration-200
+                                ${section.items.every(i => i.completed) 
+                                    ? 'border-anime-blue/20 shadow-sm opacity-80 hover:opacity-100' 
+                                    : 'border-anime-dark/5 shadow-comic-sm hover:translate-y-[-2px] hover:shadow-comic-hover'
+                                }
+                            `}>
+                                <header class="mb-4">
+                                    <h2 class="text-xl font-bold text-anime-dark flex flex-wrap items-center gap-2">
+                                        {section.title}
+                                        {section.items.every(i => i.completed) && <Check size={16} className="text-anime-blue" />}
+                                    </h2>
+                                    {section.subtitle && (
+                                        <p class="text-sm text-anime-dark/50 mt-1 font-medium bg-gray-50 inline-block px-2 py-0.5 rounded">
+                                            {section.subtitle}
+                                        </p>
+                                    )}
+                                </header>
+
+                                <ul class="space-y-3">
+                                    {section.items.map(item => (
+                                        <li class="group/item">
+                                            <div class="flex items-start gap-3">
+                                                <div class={`
+                                                    mt-1 w-5 h-5 rounded flex items-center justify-center border transition-colors flex-shrink-0
+                                                    ${item.completed ? 'bg-anime-blue border-anime-blue text-white' : 'bg-white border-gray-300 text-transparent'}
+                                                `}>
+                                                    <Check className="w-3.5 h-3.5" stroke-width="4" />
+                                                </div>
+                                                <div class="flex-grow">
+                                                    <span class={`text-base transition-all ${item.completed ? 'text-gray-400 line-through decoration-gray-300' : 'text-anime-dark font-medium'}`}>
+                                                        {item.text}
+                                                    </span>
+                                                    
+                                                    {item.children && (
+                                                        <ul class="mt-2 space-y-2 border-l-2 border-gray-100 ml-2.5 pl-4 py-1">
+                                                            {item.children.map(child => (
+                                                                <li class="flex items-start gap-2 text-sm">
+                                                                    <div class={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${child.completed ? 'bg-anime-blue/40' : 'bg-gray-300'}`}></div>
+                                                                    <span class={child.completed ? 'text-gray-400 line-through' : 'text-gray-600'}>
+                                                                        {child.text}
+                                                                    </span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+
+            <!-- End Node -->
+            <div class="relative flex gap-6 md:gap-8 mt-12 pb-12 opacity-80 hover:opacity-100 transition-opacity">
+                 <div class="flex-shrink-0">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-anime-yellow text-anime-dark border-4 border-white shadow-sm flex items-center justify-center z-10">
+                        <Star size={18} fill="currentColor" />
+                    </div>
+                </div>
+                <div class="flex-grow py-2">
+                    <h3 class="font-bold text-anime-dark text-lg">To Be Continued...</h3>
+                    <p class="text-sm text-gray-500">完成所有挑战后，开启新的篇章。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</BaseLayout>
+
+<style>
+    .font-display { font-family: 'Fredoka One', 'ZCOOL KuaiLe', cursive; }
+    
+    /* Subtle smooth fade in */
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fade-in-up 0.5s ease-out forwards;
+    }
+</style>

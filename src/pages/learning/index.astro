@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { roadmaps } from "../../data/roadmaps/index";
+import { Map, Trophy, ArrowRight } from "lucide-react";
+
+const allRoadmaps = roadmaps;
+---
+
+<BaseLayout title="学习路线图 | Learning" description="系统的技能树点亮计划。">
+    <section class="container-custom py-20">
+        <!-- Header -->
+        <div class="max-w-3xl mb-16">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-6 flex items-center gap-4">
+                <Map className="w-10 h-10 text-anime-blue" />
+                学习路线图
+            </h1>
+            <p class="text-xl text-anime-dark/60 dark:text-gray-400 leading-relaxed">
+                选择你的职业进阶路线，点亮技能树，向着 Legend 进发！
+            </p>
+        </div>
+
+        <!-- Roadmaps Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            {allRoadmaps.map((map) => (
+                <a href={`/learning/${map.id}`} class="group block relative h-full">
+                    <div class="bg-white dark:bg-[#1e1e1e] border-2 border-anime-dark dark:border-white/10 rounded-3xl overflow-hidden shadow-comic dark:shadow-none hover:shadow-comic-lg hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
+                        
+                        <!-- Card Header (Visual) -->
+                        <div class={`
+                            h-32 w-full relative overflow-hidden flex items-center justify-center border-b-2 border-anime-dark dark:border-white/10
+                            ${map.id === 'ai-coding' ? 'bg-anime-blue/10' : 'bg-anime-pink/10'}
+                        `}>
+                            <!-- Background Pattern (Dot Grid) -->
+                            <div class="absolute inset-0 opacity-30" 
+                                style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 16px 16px;">
+                            </div>
+                            
+                            <!-- Icon -->
+                            <div class={`
+                                w-16 h-16 rounded-2xl flex items-center justify-center border-2 border-anime-dark shadow-sm transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 relative z-10
+                                ${map.id === 'ai-coding' ? 'bg-anime-blue text-white' : 'bg-anime-pink text-white'}
+                            `}>
+                                <Trophy className="w-8 h-8" />
+                            </div>
+
+                            {/* Active Badge */}
+                            {map.isActive && (
+                                <div class="absolute top-4 right-4 bg-anime-yellow border-2 border-anime-dark px-3 py-1 rounded-full text-xs font-bold text-anime-dark shadow-comic-sm animate-bounce-slow">
+                                    CURRENT
+                                </div>
+                            )}
+                        </div>
+                        
+                        <!-- Content Body -->
+                        <div class="p-8 flex-grow flex flex-col bg-white dark:bg-[#1e1e1e] relative">
+                            <h3 class="text-2xl font-display font-bold text-anime-dark dark:text-white mb-3 group-hover:text-anime-pink transition-colors">
+                                {map.title}
+                            </h3>
+                            <p class="text-anime-dark/60 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
+                                {map.description}
+                            </p>
+                            
+                            <!-- Footer / Action -->
+                            <div class="mt-auto pt-6 border-t-2 border-dashed border-gray-100 dark:border-white/5 flex items-center justify-between">
+                                <span class="flex items-center gap-2 text-sm font-bold text-gray-400">
+                                    <Map className="w-4 h-4" />
+                                    {map.sections.length} 个关卡
+                                </span>
+
+                                <span class={`
+                                    px-6 py-2 rounded-xl font-bold text-sm border-2 border-anime-dark flex items-center gap-2 transition-all shadow-comic-sm group-hover:shadow-comic
+                                    ${map.id === 'ai-coding' 
+                                        ? 'bg-anime-blue text-white group-hover:bg-anime-dark' 
+                                        : 'bg-white text-anime-dark hover:bg-gray-50'
+                                    }
+                                `}>
+                                    开始挑战 <ArrowRight className="w-4 h-4" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            ))}
+        </div>
+    </section>
+</BaseLayout>

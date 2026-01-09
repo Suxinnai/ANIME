@@ -1,0 +1,681 @@
+{
+    "id": "ai-coding",
+    "isActive": true,
+    "title": "AI 编程助手/RAG/Agent 12周学习路线图",
+    "description": "从零开始 → 12 周内具备 AI 编程助手/RAG/Agent 实习竞争力",
+    "sections": [
+        {
+            "title": "0）总目标（你最后应交付的“证据”）",
+            "items": [
+                {
+                    "id": "goal-1",
+                    "text": "项目 1（主项目）：Repo 级代码 RAG 问答系统（能引用文件片段、支持 metadata 过滤、带基础评测脚本）",
+                    "completed": false
+                },
+                {
+                    "id": "goal-2",
+                    "text": "项目 2（副项目）：二选一",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "goal-2a",
+                            "text": "A. 代码修复 Agent（跑测试→定位→修改→重跑，带行动日志与安全限制）",
+                            "completed": false
+                        },
+                        {
+                            "id": "goal-2b",
+                            "text": "B. VS Code 小插件（选中代码→解释/生成注释，能读取当前文件上下文）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "goal-3",
+                    "text": "最小评测闭环：固定一批题/问题集，能跑脚本对比版本效果（哪怕是你自己定义的指标也行）",
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "第 1 周：环境 + 入门“会写得出来”",
+            "subtitle": "目标：能写简单脚本，能跑通一个小项目骨架。",
+            "items": [
+                {
+                    "id": "w1-1",
+                    "text": "安装并会用：VS Code、Python 3、pip/venv（或 uv/poetry）、Git",
+                    "completed": false
+                },
+                {
+                    "id": "w1-2",
+                    "text": "学会在命令行里：创建项目文件夹、运行脚本、设置环境变量、看报错、看日志",
+                    "completed": false
+                },
+                {
+                    "id": "w1-3",
+                    "text": "Python 基础语法打通：变量、if/for/while、函数、list/dict、字符串处理",
+                    "completed": false
+                },
+                {
+                    "id": "w1-4",
+                    "text": "写 5 个小脚本（每个不超过 100 行）：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w1-4a",
+                            "text": "文本统计（词频/行数/去重）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w1-4b",
+                            "text": "批量处理文件（遍历目录、筛选扩展名）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w1-4c",
+                            "text": "简单爬取/请求 API（requests）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w1-4d",
+                            "text": "CSV/JSON 读写",
+                            "completed": false
+                        },
+                        {
+                            "id": "w1-4e",
+                            "text": "一个你自己生活里的自动化（例如整理下载目录）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w1-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w1-def1",
+                            "text": "你能在 30 分钟内从 0 创建项目并跑起来（含依赖安装）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w1-def2",
+                            "text": "你能在读懂并定位常见报错（ImportError、KeyError、TypeError 等）",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 2 周：工程基本功（像开发者一样写）",
+            "subtitle": "目标：你写的不是“脚本”，而是“可维护的小工程”。",
+            "items": [
+                {
+                    "id": "w2-1",
+                    "text": "Git 必会：init/clone/add/commit/push/branch/merge（至少能解决一次冲突）",
+                    "completed": false
+                },
+                {
+                    "id": "w2-2",
+                    "text": "代码规范：格式化（ruff/black 二选一）、基本 lint（ruff）",
+                    "completed": false
+                },
+                {
+                    "id": "w2-3",
+                    "text": "基础测试：pytest 会写 5 个单测（assert + fixture/参数化随意）",
+                    "completed": false
+                },
+                {
+                    "id": "w2-4",
+                    "text": "学会写 README：安装、运行、示例输入输出、项目结构说明",
+                    "completed": false
+                },
+                {
+                    "id": "w2-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w2-def1",
+                            "text": "你的任意一个脚本都有 README.md + requirements.txt/pyproject.toml",
+                            "completed": false
+                        },
+                        {
+                            "id": "w2-def2",
+                            "text": "你能解释：为什么要写测试、如何做最小回归",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 3–4 周：数据结构/算法 + 代码阅读能力（面试下限）",
+            "subtitle": "目标：能扛住基础面试题，能读开源项目代码不崩。",
+            "items": [
+                {
+                    "id": "w3-1",
+                    "text": "数据结构必备：数组/链表/栈/队列/哈希表/树/堆（会用即可）",
+                    "completed": false
+                },
+                {
+                    "id": "w3-2",
+                    "text": "算法必备：二分、排序思想、BFS/DFS、贪心/DP（不求刷爆题，但要能写出来）",
+                    "completed": false
+                },
+                {
+                    "id": "w3-3",
+                    "text": "LeetCode/力扣：做 30 道（简单为主，少量中等）",
+                    "completed": false
+                },
+                {
+                    "id": "w3-4",
+                    "text": "训练“读代码”：找一个中型开源库（Python/JS 都行），每天读 30 分钟并做笔记：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w3-4a",
+                            "text": "入口在哪",
+                            "completed": false
+                        },
+                        {
+                            "id": "w3-4b",
+                            "text": "目录结构怎么分层",
+                            "completed": false
+                        },
+                        {
+                            "id": "w3-4c",
+                            "text": "哪些模块是核心",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w3-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w3-def1",
+                            "text": "你能在白板/共享屏幕上写出 BFS/DFS、哈希统计、堆 topK",
+                            "completed": false
+                        },
+                        {
+                            "id": "w3-def2",
+                            "text": "你能口头说明一个开源项目的目录分层与主要数据流",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 5 周：LLM 应用开发基础（Prompt + 结构化输出/工具调用）",
+            "subtitle": "目标：理解“把模型当工程组件”的基本套路，为 Agent/RAG 做准备。",
+            "items": [
+                {
+                    "id": "w5-1",
+                    "text": "了解消息结构：system/user/assistant（知道为什么要分层）",
+                    "completed": false
+                },
+                {
+                    "id": "w5-2",
+                    "text": "学会写“可控输出”的 Prompt（明确格式、边界、失败处理）",
+                    "completed": false
+                },
+                {
+                    "id": "w5-3",
+                    "text": "一个小 demo：输入需求 → 输出固定 JSON（例如：{task_type, files_needed, plan}）",
+                    "completed": false
+                },
+                {
+                    "id": "w5-4",
+                    "text": "了解“多步工具调用/循环”的概念（Agent 的核心形态）",
+                    "completed": false
+                },
+                {
+                    "id": "w5-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w5-def1",
+                            "text": "你能稳定让模型输出可解析 JSON（失败时能自动重试/修复）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w5-def2",
+                            "text": "你能解释：为什么需要工具调用、它解决什么问题",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 6 周：RAG 基础链路跑通（先能用）",
+            "subtitle": "目标：把“检索增强生成”完整跑通一次。",
+            "items": [
+                {
+                    "id": "w6-1",
+                    "text": "选一个向量库（建议 Chroma 起步）：能本地跑、易调试",
+                    "completed": false
+                },
+                {
+                    "id": "w6-2",
+                    "text": "实现最小 RAG：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w6-2a",
+                            "text": "文档加载（先用普通文本/markdown）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w6-2b",
+                            "text": "切分 chunk（先用固定长度）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w6-2c",
+                            "text": "embedding → 入库",
+                            "completed": false
+                        },
+                        {
+                            "id": "w6-2d",
+                            "text": "query → top_k 检索 → 拼上下文 → 生成回答",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w6-3",
+                    "text": "引入 retriever 概念（便于替换检索策略）",
+                    "completed": false
+                },
+                {
+                    "id": "w6-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w6-def1",
+                            "text": "你能对同一份资料问 10 个问题，至少 6 个回答“引用内容明显相关”",
+                            "completed": false
+                        },
+                        {
+                            "id": "w6-def2",
+                            "text": "你能说清楚：chunk_size/top_k 改动对效果与成本的影响",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 7 周：把 RAG 换成“代码库 RAG”（贴岗位）",
+            "subtitle": "目标：从“文档问答”升级到“对仓库代码问答”。",
+            "items": [
+                {
+                    "id": "w7-1",
+                    "text": "选择一个中型仓库（建议 5k–50k 行，别太大）",
+                    "completed": false
+                },
+                {
+                    "id": "w7-2",
+                    "text": "设计代码切分策略（先简单可用）：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w7-2a",
+                            "text": "按文件切分 + 限制 chunk 长度",
+                            "completed": false
+                        },
+                        {
+                            "id": "w7-2b",
+                            "text": "保存 metadata：path、language、module_dir、repo_commit 等",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w7-3",
+                    "text": "在检索阶段支持 metadata 过滤（这是代码库 RAG 的关键）",
+                    "completed": false
+                },
+                {
+                    "id": "w7-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w7-def1",
+                            "text": "你能问“只在 src/ 下找”“只找 Python 文件”，并明显减少无关召回",
+                            "completed": false
+                        },
+                        {
+                            "id": "w7-def2",
+                            "text": "你的回答能列出引用片段来自哪些文件（至少 path）",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 8 周：RAG 质量提升（召回准确度是 JD 的重点）",
+            "subtitle": "目标：让你能在面试里讲“我怎么把召回做准”。",
+            "items": [
+                {
+                    "id": "w8-1",
+                    "text": "为 query 做“检索前处理”（Query rewrite/关键词补充，先简单规则也行）",
+                    "completed": false
+                },
+                {
+                    "id": "w8-2",
+                    "text": "尝试 2 种检索策略并对比：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w8-2a",
+                            "text": "similarity vs MMR（或 top_k 不同取值）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w8-2b",
+                            "text": "加一个简单 rerank（哪怕用规则：同文件多片段合并/去重）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w8-3",
+                    "text": "做“上下文组装策略”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w8-3a",
+                            "text": "去重（同文件重复 chunk）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w8-3b",
+                            "text": "限制每个文件最多 N 段",
+                            "completed": false
+                        },
+                        {
+                            "id": "w8-3c",
+                            "text": "控制总 token（超了就截断/摘要）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w8-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w8-def1",
+                            "text": "你能拿出 10 条失败案例，逐条归因：是“没召回”还是“召回了但模型没用好”",
+                            "completed": false
+                        },
+                        {
+                            "id": "w8-def2",
+                            "text": "你能清楚解释 2–3 个取舍（例如：top_k 越大不一定越好）",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 9 周：评测闭环 1.0（让“改动可量化”）",
+            "subtitle": "目标：做一个最小可跑的评测脚本，形成迭代闭环。",
+            "items": [
+                {
+                    "id": "w9-1",
+                    "text": "自建一个评测集（建议 50 条起）：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w9-1a",
+                            "text": "代码定位类：函数在哪、谁调用它",
+                            "completed": false
+                        },
+                        {
+                            "id": "w9-1b",
+                            "text": "逻辑解释类：某模块干什么、关键流程",
+                            "completed": false
+                        },
+                        {
+                            "id": "w9-1c",
+                            "text": "修改建议类：怎么修复某类 bug（不要求必对，但要可评）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w9-2",
+                    "text": "引入 LLM-based 评估器做自动评分（适合 RAG）",
+                    "completed": false
+                },
+                {
+                    "id": "w9-3",
+                    "text": "输出一个简单报告（CSV/Markdown 都行）：每条 query 的分数、引用、失败原因",
+                    "completed": false
+                },
+                {
+                    "id": "w9-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w9-def1",
+                            "text": "你改 chunk/检索/Prompt 后，评测脚本能跑出“前后对比”",
+                            "completed": false
+                        },
+                        {
+                            "id": "w9-def2",
+                            "text": "你能用数据讲清楚：你提升了什么、代价是什么（速度/token/成本）",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 10 周：代码生成/修复评测入门（加分但很有用）",
+            "subtitle": "目标：了解“代码任务怎么评测”，对 AI 编程助手很关键。",
+            "items": [
+                {
+                    "id": "w10-1",
+                    "text": "跑通 HumanEval 的评测 harness（理解 pass@k、以及运行不可信代码的安全提醒）",
+                    "completed": false
+                },
+                {
+                    "id": "w10-2",
+                    "text": "了解 MBPP（Mostly Basic Programming Problems）是什么、为什么常用",
+                    "completed": false
+                },
+                {
+                    "id": "w10-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w10-def1",
+                            "text": "你能解释：为什么“运行单测判对错”比 BLEU/字符串匹配更靠谱（在代码任务上）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w10-def2",
+                            "text": "你能说出至少 2 个评测风险：数据污染、过拟合 prompt、执行安全",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 11 周：副项目（Agent 或 VS Code 插件）落地",
+            "subtitle": "二选一做完就行（做完另一个属于额外加分）。",
+            "items": [
+                {
+                    "id": "w11-a",
+                    "text": "选项 A：代码修复 Agent（推荐，更贴 JD 的 Agent/工作流）",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w11-a1",
+                            "text": "定义工具集（最少 3 个）：search_files、read_file、apply_patch、run_tests",
+                            "completed": false
+                        },
+                        {
+                            "id": "w11-a2",
+                            "text": "做循环：失败→分析→修改→重跑（最多 N 次，输出行动日志）",
+                            "completed": false
+                        },
+                        {
+                            "id": "w11-a3",
+                            "text": "安全限制：只允许 allowlist命令（例如只允许运行测试/lint）",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w11-b",
+                    "text": "选项 B：VS Code 插件（如果你想走 IDE 方向）",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w11-b1",
+                            "text": "跑通 VS Code “Hello World extension”",
+                            "completed": false
+                        },
+                        {
+                            "id": "w11-b2",
+                            "text": "学会注册命令、理解 package.json 的贡献点（contributes）与命令注册",
+                            "completed": false
+                        },
+                        {
+                            "id": "w11-b3",
+                            "text": "实现一个最小功能：选中代码 → 生成注释/解释 → 插入到编辑器、可配置模型/温度/最大 tokens",
+                            "completed": false
+                        }
+                    ]
+                },
+                {
+                    "id": "w11-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w11-defa",
+                            "text": "给它一个你准备好的 failing test，它能在 N 次内修复",
+                            "completed": false
+                        },
+                        {
+                            "id": "w11-defb",
+                            "text": "插件可安装、可运行、有 README、有演示动图/录屏",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "第 12 周：打磨作品集（面试直接拿来讲）",
+            "subtitle": "目标：把“能跑”升级到“别人一看就信你做过工程”。",
+            "items": [
+                {
+                    "id": "w12-1",
+                    "text": "项目结构清晰（ingest/index/retrieve/generate/eval 分目录）",
+                    "completed": false
+                },
+                {
+                    "id": "w12-2",
+                    "text": "README 补齐：1 分钟介绍、架构图、一键运行步骤、评测方法与结果、失败案例 + 改进",
+                    "completed": false
+                },
+                {
+                    "id": "w12-3",
+                    "text": "录一个 3–5 分钟 demo（屏幕录制）",
+                    "completed": false
+                },
+                {
+                    "id": "w12-4",
+                    "text": "整理面试讲稿（STAR）：做了什么、为什么这么设计、遇到什么坑、怎么验证变好",
+                    "completed": false
+                },
+                {
+                    "id": "w12-def",
+                    "text": "“完成定义”：",
+                    "completed": false,
+                    "children": [
+                        {
+                            "id": "w12-def1",
+                            "text": "任何人按 README 能在 10 分钟内跑起来",
+                            "completed": false
+                        },
+                        {
+                            "id": "w12-def2",
+                            "text": "你能用 5 分钟讲完项目亮点，用 10 分钟深入细节",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "每日学习打勾模板（每天 3–4 小时）",
+            "items": [
+                {
+                    "id": "daily-1",
+                    "text": "今日目标（1 句话写清楚）",
+                    "completed": false
+                },
+                {
+                    "id": "daily-2",
+                    "text": "编码 ≥ 90 分钟（必须）",
+                    "completed": false
+                },
+                {
+                    "id": "daily-3",
+                    "text": "阅读文档/源码 ≥ 30 分钟（必须）",
+                    "completed": false
+                },
+                {
+                    "id": "daily-4",
+                    "text": "复盘 10 分钟：今天踩的坑 + 解决方式（必须）",
+                    "completed": false
+                },
+                {
+                    "id": "daily-5",
+                    "text": "提交一次 Git（哪怕是小改动）",
+                    "completed": false
+                },
+                {
+                    "id": "daily-6",
+                    "text": "写 1 条“可复用笔记”（例如：如何做 metadata filter、如何控制 token）",
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "额外加分路线（可选）：了解 MCP（不必现在就深挖）",
+            "items": [
+                {
+                    "id": "mcp-1",
+                    "text": "MCP 是一个开放协议，用于把外部数据源/工具以标准方式接入 LLM 应用（适合 AI IDE/Agent 场景）。",
+                    "completed": false
+                },
+                {
+                    "id": "mcp-2",
+                    "text": "跑通一个现成 MCP server（比如 GitHub 相关）并在你的 Agent demo 里调用一次",
+                    "completed": false
+                }
+            ]
+        }
+    ]
+}
