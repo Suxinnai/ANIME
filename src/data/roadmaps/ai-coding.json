@@ -43,17 +43,17 @@
                 {
                     "id": "w1-1",
                     "text": "安装并会用：VS Code、Python 3、pip/venv（或 uv/poetry）、Git",
-                    "completed": false
+                    "completed": true
                 },
                 {
                     "id": "w1-2",
                     "text": "学会在命令行里：创建项目文件夹、运行脚本、设置环境变量、看报错、看日志",
-                    "completed": false
+                    "completed": true
                 },
                 {
                     "id": "w1-3",
                     "text": "Python 基础语法打通：变量、if/for/while、函数、list/dict、字符串处理",
-                    "completed": false
+                    "completed": true
                 },
                 {
                     "id": "w1-4",
